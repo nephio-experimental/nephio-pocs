@@ -1,0 +1,24 @@
+# permissions for end users to edit repoconfigs.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: repoconfig-editor-role
+rules:
+- apiGroups:
+  - baseconfig.nephio.io
+  resources:
+  - repoconfigs
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - baseconfig.nephio.io
+  resources:
+  - repoconfigs/status
+  verbs:
+  - get

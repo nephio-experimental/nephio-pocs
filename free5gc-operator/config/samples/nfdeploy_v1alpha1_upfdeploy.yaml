@@ -1,0 +1,6 @@
+apiVersion: nfdeploy.nephio.io/v1alpha1
+kind: UpfDeploy
+metadata:
+  name: upfdeploy-sample
+spec:
+  # TODO(user): Add fields here

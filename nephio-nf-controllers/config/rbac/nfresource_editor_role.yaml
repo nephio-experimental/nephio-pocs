@@ -1,0 +1,24 @@
+# permissions for end users to edit nfresources.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: nfresource-editor-role
+rules:
+- apiGroups:
+  - networkfunction.nephio.io
+  resources:
+  - nfresources
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - networkfunction.nephio.io
+  resources:
+  - nfresources/status
+  verbs:
+  - get

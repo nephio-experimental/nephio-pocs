@@ -1,0 +1,68 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.9.2
+  creationTimestamp: null
+  name: repoconfigs.baseconfig.nephio.io
+spec:
+  group: baseconfig.nephio.io
+  names:
+    kind: RepoConfig
+    listKind: RepoConfigList
+    plural: repoconfigs
+    singular: repoconfig
+  scope: Cluster
+  versions:
+  - name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: RepoConfig is the Schema for the repoconfigs API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: RepoConfigSpec defines the desired state of RepoConfig
+            properties:
+              catalogbasepkgs:
+                additionalProperties:
+                  type: string
+                type: object
+              catalogrepo:
+                type: string
+              deploybasepkgs:
+                additionalProperties:
+                  type: string
+                type: object
+              deployrepos:
+                additionalProperties:
+                  type: string
+                type: object
+              mgmtrepo:
+                type: string
+            required:
+            - catalogbasepkgs
+            - catalogrepo
+            - deploybasepkgs
+            - deployrepos
+            - mgmtrepo
+            type: object
+          status:
+            description: RepoConfigStatus defines the observed state of RepoConfig
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

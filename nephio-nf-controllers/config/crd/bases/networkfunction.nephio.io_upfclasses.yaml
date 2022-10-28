@@ -1,0 +1,70 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.9.2
+  creationTimestamp: null
+  name: upfclasses.networkfunction.nephio.io
+spec:
+  group: networkfunction.nephio.io
+  names:
+    kind: UpfClass
+    listKind: UpfClassList
+    plural: upfclasses
+    singular: upfclass
+  scope: Cluster
+  versions:
+  - name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: Upfclass is the Schema for the upfclasses API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: UpfclassSpec defines the desired state of Upfclass
+            properties:
+              dnn:
+                items:
+                  type: string
+                type: array
+              downlinkThroughput:
+                type: string
+              n3endpoints:
+                type: integer
+              n4endpoints:
+                type: integer
+              n6endpoints:
+                type: integer
+              n9endpoints:
+                type: integer
+              uplinkThroughput:
+                description: Controller         string   `json:"controller"`
+                type: string
+            required:
+            - downlinkThroughput
+            - n3endpoints
+            - n4endpoints
+            - n6endpoints
+            - n9endpoints
+            - uplinkThroughput
+            type: object
+          status:
+            description: UpfclassStatus defines the observed state of Upfclass
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

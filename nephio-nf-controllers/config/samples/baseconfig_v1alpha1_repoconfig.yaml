@@ -1,0 +1,6 @@
+apiVersion: baseconfig.nephio.io/v1alpha1
+kind: RepoConfig
+metadata:
+  name: repoconfig-sample
+spec:
+  # TODO(user): Add fields here

@@ -1,0 +1,16 @@
+domain: nephio.io
+layout:
+- go.kubebuilder.io/v3
+projectName: free5gc-operator
+repo: nephio.io/nfdeploy
+resources:
+- api:
+    crdVersion: v1
+    namespaced: true
+  controller: true
+  domain: nephio.io
+  group: nfdeploy
+  kind: UpfDeploy
+  path: nephio.io/nfdeploy/api/v1alpha1
+  version: v1alpha1
+version: "3"
