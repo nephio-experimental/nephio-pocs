@@ -36,8 +36,7 @@ upfs.networkfunction.nephio.io                        2022-10-28T06:49:22Z
 ```
 **Note:** the information from the date/time column should vary for your output
 
-The controllers expect to have at least two of the CRs specified, a baseconfig resource named "repo" and a UpfClass resource. Example can be found under the [sample](https://github.com/nephio-project/nephio-pocs/nephio-nf-controllers/sample) directory, look for [baseconfig.yaml](https://github.com/nephio-project/nephio-pocs/nephio-nf-controllers/sample/baseconfig.yaml) for RepoConfig resource and [upfclass.yaml](https://github.com/nephio-project/nephio-pocs/nephio-nf-
-controllers/sample/upfclass.yaml) for and example of UpfClass resource.
+The controllers expect to have at least two of the CRs specified, a baseconfig resource named "repo" and a UpfClass resource. Example can be found under the [sample](https://github.com/nephio-project/nephio-pocs/tree/main/nephio-nf-controllers/sample) directory, look for [baseconfig.yaml](https://github.com/nephio-project/nephio-pocs/blob/main/nephio-nf-controllers/sample/baseconfig.yaml) for RepoConfig resource and [upfclass.yaml](https://github.com/nephio-project/nephio-pocs/blob/main/nephio-nf-controllers/sample/upfclass.yaml) for and example of UpfClass resource.
 
 Verify these resources are created
 ```sh
@@ -59,7 +58,7 @@ make run
 **Note:** These controllers will automatically use the current context in your kubeconfig file (i.e. whatever cluster `kubectl cluster-info` shows).
 
 ### Specifying the NF deployment intent
-First we specify your NF deployment intent, as an [example](https://github.com/nephio-project/nephio-pocs/nephio-nf- controllers/sample/nfdeploy.yaml):
+First we specify your NF deployment intent, as an [example](https://github.com/nephio-project/nephio-pocs/blob/main/nephio-nf-controllers/sample/nfdeploy.yaml):
 
 ```sh
 apiVersion: networkfunction.nephio.io/v1alpha1
