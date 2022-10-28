@@ -1,80 +1,67 @@
 # free5gc-operator
-// TODO(user): Add simple overview of use/purpose
+Sample free5gc operator for Nephio
 
 ## Description
-// TODO(user): An in-depth paragraph about your project and overview of use
+Nephio free5gc operator takes the Nephio community produced XXXDeployment (where XXX = AMF | SMF | UPF) custom resources, and deploys the corresponding free5gc AMF | SMF | UPF onto the cluster based on the CR's specifications.
 
 ## Getting Started
-You’ll need a Kubernetes cluster to run against. You can use [KIND](https://sigs.k8s.io/kind) to get a local cluster for testing, or run against a remote cluster.
-**Note:** Your controller will automatically use the current context in your kubeconfig file (i.e. whatever cluster `kubectl cluster-info` shows).
-
-### Running on the cluster
-1. Install Instances of Custom Resources:
+Prior to running free5gc operator, multus needs to be installed on cluster, and standard CNI binaries need to be installed on /opt/cni/bin directory. We can verify these conditions via:
 
 ```sh
-kubectl apply -f config/samples/
+$ kubectl get daemonset -n kube-system
+NAME             DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR            AGE
+kube-multus-ds   1         1         1       1            1           <none>                   23d
+
+$ kubectl get pods -n kube-system | grep multus
+kube-multus-ds-ljs8l                       1/1     Running   0          23d
 ```
 
-2. Build and push your image to the location specified by `IMG`:
-	
-```sh
-make docker-build docker-push IMG=<some-registry>/free5gc-operator:tag
-```
-	
-3. Deploy the controller to the cluster with the image specified by `IMG`:
-
-```sh
-make deploy IMG=<some-registry>/free5gc-operator:tag
-```
-
-### Uninstall CRDs
-To delete the CRDs from the cluster:
+and 
 
 ```sh
-make uninstall
+$ ls -l /opt/cni/bin
+total 51516
+-rwxr-xr-x 1 root root 3056120 Sep 17 08:14 bandwidth
+-rwxr-xr-x 1 root root 3381272 Sep 17 08:14 bridge
+-rwxr-xr-x 1 root root 9100088 Sep 17 08:14 dhcp
+-rwxr-xr-x 1 root root 4425816 Sep 17 08:14 firewall
+-rwxr-xr-x 1 root root 2232440 Sep 17 08:14 flannel
+-rwxr-xr-x 1 root root 2990552 Sep 17 08:14 host-device
+-rwxr-xr-x 1 root root 2580024 Sep 17 08:14 host-local
+-rwxr-xr-x 1 root root 3138008 Sep 17 08:14 ipvlan
+-rwxr-xr-x 1 root root 2322808 Sep 17 08:14 loopback
+-rwxr-xr-x 1 root root 3187384 Sep 17 08:14 macvlan
+-rwxr-xr-x 1 root root 2859000 Sep 17 08:14 portmap
+-rwxr-xr-x 1 root root 3332088 Sep 17 08:14 ptp
+-rwxr-xr-x 1 root root 2453976 Sep 17 08:14 sbr
+-rwxr-xr-x 1 root root 2092504 Sep 17 08:14 static
+-rwxr-xr-x 1 root root 2421240 Sep 17 08:14 tuning
+-rwxr-xr-x 1 root root 3138008 Sep 17 08:14 vlan
 ```
 
-### Undeploy controller
-UnDeploy the controller to the cluster:
+for free5gc, at least macvlan needs to be installed.
 
-```sh
-make undeploy
-```
-
-## Contributing
-// TODO(user): Add detailed information on how you would like others to contribute to this project
-
-### How it works
-This project aims to follow the Kubernetes [Operator pattern](https://kubernetes.io/docs/concepts/extend-kubernetes/operator/)
-
-It uses [Controllers](https://kubernetes.io/docs/concepts/architecture/controller/) 
-which provides a reconcile function responsible for synchronizing resources untile the desired state is reached on the cluster 
-
-### Test It Out
-1. Install the CRDs into the cluster:
+### Loading the CRD
+Under the free5gc-operator directory, do:
 
 ```sh
 make install
 ```
 
-2. Run your controller (this will run in the foreground, so switch to a new terminal if you want to leave it running):
+and the following CRD should be loaded:
+
+```sh
+$ kubectl get crds | grep nephio
+upfdeploys.nfdeploy.nephio.io                         2022-10-10T07:54:28Z
+```
+
+### Run the controller
+
+Under the free5gc-operator directory, do:
 
 ```sh
 make run
 ```
-
-**NOTE:** You can also run this in one step by running: `make install run`
-
-### Modifying the API definitions
-If you are editing the API definitions, generate the manifests such as CRs or CRDs using:
-
-```sh
-make manifests
-```
-
-**NOTE:** Run `make --help` for more information on all potential `make` targets
-
-More information can be found via the [Kubebuilder Documentation](https://book.kubebuilder.io/introduction.html)
 
 ## License
 
