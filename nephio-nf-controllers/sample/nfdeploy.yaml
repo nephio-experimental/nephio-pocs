@@ -1,0 +1,14 @@
+apiVersion: networkfunction.nephio.io/v1alpha1
+kind: NfDeployment
+metadata:
+  name: 5gc-deploy-test
+spec:
+  sites:
+    - id: free5gc-upf-1
+      locationName: somewhere
+      clusterName: nephio-edge-1
+      nfKind: upf
+      nfClassName: upf-class-1
+      nfVendor: free5gc
+      nfVersion: v3.1.1
+      nfNamespace: upf-1

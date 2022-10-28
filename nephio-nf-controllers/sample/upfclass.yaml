@@ -1,0 +1,13 @@
+apiVersion: networkfunction.nephio.io/v1alpha1
+kind: UpfClass
+metadata:
+  name: upf-class-1
+spec:
+  uplinkThroughput: "1Gb/s"
+  downlinkThroughput: "5Gb/s"
+  n3endpoints: 1
+  n4endpoints: 1
+  n6endpoints: 1
+  n9endpoints: 0
+  dnn:
+  - internet

@@ -1,0 +1,14 @@
+apiVersion: baseconfig.nephio.io/v1alpha1
+kind: RepoConfig
+metadata:
+  name: repo
+spec:
+  catalogrepo: nephio-test-catalog
+  mgmtrepo: nephio-test-catalog
+  deployrepos:
+    nephio-edge-1: nephio-test-deployment
+  catalogbasepkgs:
+    nephio-upf-common: nephio-test-catalog-564586aae21fd926097df2815784db149518a082
+    nephio-free5gc-upf: nephio-test-catalog-3555e112d4cd51cc8a3db3fc65f88f8311de0d4c
+  deploybasepkgs:
+    nephio-upf: nephio-test-deployment-396ba414eb70a0d0de2b29f70f2ce9368dea2a25
