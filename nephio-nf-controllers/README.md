@@ -1,80 +1,159 @@
 # nephio-nf-controllers
-// TODO(user): Add simple overview of use/purpose
+This directory contains sample Nephio controllers for Network Function deployment
 
 ## Description
-// TODO(user): An in-depth paragraph about your project and overview of use
+There are three controllers for this package:
+
+1. nfdeployment controller: processes NfDeployment custom resources (CR), mainly for high-level user intent which specifies the target cluster to deploy a NF for a specified vendor and version. The output of this controller is creation of vendor package which contains resource requirements, and a NF type common package.
+
+2. nfresource controller: processes NfResource CRs --- per NF instance: which specifies the infrastructure resource needs for this NF
+
+3. upf controller: processes Upf CRs --- per UPF instance: this CR specifies the UPF related deployment configurations
 
 ## Getting Started
-You’ll need a Kubernetes cluster to run against. You can use [KIND](https://sigs.k8s.io/kind) to get a local cluster for testing, or run against a remote cluster.
-**Note:** Your controller will automatically use the current context in your kubeconfig file (i.e. whatever cluster `kubectl cluster-info` shows).
-
-### Running on the cluster
-1. Install Instances of Custom Resources:
-
+The prerequisite for running these controllers are the same as those specified by [Nephio PoC](https://github.com/nephio-project/nephio-poc#installation-overview). There are two repositories created via the PoC instruction: catalog and deployment. In the catalog repo, we will need two dummy packages: one for NF vendor specific resource and one for UPF.For now, the content of the UPF package is irrelevant, but free5gc package needs some NF defaults, such package can be found
+[here](https://github.com/s3wong/nephio-test-catalog/tree/drafts/nephio-free5gc-upf/v1/nephio-free5gc-upf). Note the name of these packages via
 ```sh
-kubectl apply -f config/samples/
+$ ~/kpt alpha rpkg get
 ```
+Also, another dummy package is also needed at the deployment repo to clone for edge cluster package.
 
-2. Build and push your image to the location specified by `IMG`:
-	
-```sh
-make docker-build docker-push IMG=<some-registry>/nephio-nf-controllers:tag
-```
-	
-3. Deploy the controller to the cluster with the image specified by `IMG`:
+These controllers all run on Nephio management cluster. The instruction for installing Nephio management cluster (server) components can be found [here](https://github.com/nephio-project/nephio-poc#installing-the-server-components).
 
-```sh
-make deploy IMG=<some-registry>/nephio-nf-controllers:tag
-```
-
-### Uninstall CRDs
-To delete the CRDs from the cluster:
-
-```sh
-make uninstall
-```
-
-### Undeploy controller
-UnDeploy the controller to the cluster:
-
-```sh
-make undeploy
-```
-
-## Contributing
-// TODO(user): Add detailed information on how you would like others to contribute to this project
-
-### How it works
-This project aims to follow the Kubernetes [Operator pattern](https://kubernetes.io/docs/concepts/extend-kubernetes/operator/)
-
-It uses [Controllers](https://kubernetes.io/docs/concepts/architecture/controller/) 
-which provides a reconcile function responsible for synchronizing resources untile the desired state is reached on the cluster 
-
-### Test It Out
-1. Install the CRDs into the cluster:
-
+### Loading the CRDs
+Once the server components are installed, we then need to install the set of CRDs to your cluster. On the nephio-nf-controllers directory, do:
 ```sh
 make install
 ```
+Once this is done, we should see the following CRDs loaded on the mgmt cluster:
+```sh
+$ kubectl get crds | grep nephio
+nfdeployments.networkfunction.nephio.io               2022-10-28T06:49:20Z
+nfresources.networkfunction.nephio.io                 2022-10-28T06:49:21Z
+repoconfigs.baseconfig.nephio.io                      2022-10-28T06:49:21Z
+upfclasses.networkfunction.nephio.io                  2022-10-28T06:49:21Z
+upfs.networkfunction.nephio.io                        2022-10-28T06:49:22Z
+```
+**Note:** the information from the date/time column should vary for your output
 
-2. Run your controller (this will run in the foreground, so switch to a new terminal if you want to leave it running):
+The controllers expect to have at least two of the CRs specified, a baseconfig resource named "repo" and a UpfClass resource. Example can be found under the [sample](https://github.com/nephio-project/nephio-pocs/nephio-nf-controllers/sample) directory, look for [baseconfig.yaml](https://github.com/nephio-project/nephio-pocs/nephio-nf-controllers/sample/baseconfig.yaml) for RepoConfig resource and [upfclass.yaml](https://github.com/nephio-project/nephio-pocs/nephio-nf-
+controllers/sample/upfclass.yaml) for and example of UpfClass resource.
+
+Verify these resources are created
+```sh
+$ kubectl get repoconfigs.baseconfig.nephio.io
+NAME   AGE
+repo   46m
+
+$ kubectl get upfclasses.networkfunction.nephio.io
+NAME          AGE
+upf-class-1   46m
+```
+
+### Running the controllers
+Run the controllers, under the nephio-nf-controllers directory, run:
 
 ```sh
 make run
 ```
+**Note:** These controllers will automatically use the current context in your kubeconfig file (i.e. whatever cluster `kubectl cluster-info` shows).
 
-**NOTE:** You can also run this in one step by running: `make install run`
-
-### Modifying the API definitions
-If you are editing the API definitions, generate the manifests such as CRs or CRDs using:
+### Specifying the NF deployment intent
+First we specify your NF deployment intent, as an [example](https://github.com/nephio-project/nephio-pocs/nephio-nf- controllers/sample/nfdeploy.yaml):
 
 ```sh
-make manifests
+apiVersion: networkfunction.nephio.io/v1alpha1
+kind: NfDeployment
+metadata:
+  name: 5gc-deploy-test
+spec:
+  sites:
+    - id: free5gc-upf-1
+      locationName: somewhere
+      clusterName: nephio-edge-1
+      nfKind: upf
+      nfClassName: upf-class-1
+      nfVendor: free5gc
+      nfVersion: v3.1.1
+      nfNamespace: upf-1
 ```
 
-**NOTE:** Run `make --help` for more information on all potential `make` targets
+the specification above specifies a deployment of one instance of free5gc v3.1.1 UPF to cluster nephio-edge-1 and namespace upf-1  with class upf-class-1. We can simply apply this intent via:
 
-More information can be found via the [Kubebuilder Documentation](https://book.kubebuilder.io/introduction.html)
+```sh
+kubectl apply -f nfdeploy.yaml
+```
+
+### Deploy the NF
+The result of applying NfDeployment resource is the creation of vendor package and a NF type (UPF in this case) specific package for each instance. For free5gc, the NfResource resource contains only Network Attachment Definition templates --- one for each of the Nx interfaces. The Upf package (auto-generated by controller) should contain the following:
+
+```sh
+apiVersion: networkfunction.nephio.io/v1alpha1
+kind: Upf
+metadata:
+  name: free5gc-upf-1
+  namespace: default
+spec:
+  parent: upf-class-1
+  clustername: nephio-edge-1
+  namespace: upf-1
+  n3:
+    endpoints:
+    - ipv4Addr:
+      - "YOUR_IPv4"
+      gwv4addr: "YOUR_IPv4_GW"
+  n4:
+    endpoints:
+    - ipv4Addr:
+      - "YOUR_IPv4"
+      gwv4addr: "YOUR_IPv4_GW"
+  n6:
+    endpoints:
+      internet:
+        ipendpoints:
+          ipv4Addr:
+          - "YOUR_IPv4"
+          gwv4addr: "YOUR_IPv4_GW"
+        ipaddrpool: "YOUR_IPv4_POOL"
+```
+
+The YOUR_XXX fields should be input by user afterward. Once the input for these packages are done, we can push the packages to deployment repo via
+
+```sh
+kpt alpha rpkg propose <NAD package> -ndefault
+kpt alpha rpkg approve <NAD package> -ndefault
+```
+
+On the edge cluster, verify these NADs are loaded:
+
+```sh
+$ kubectl get network-attachment-definitions -n upf-1
+NAME               AGE
+free5gc-upf-1-n3   17s
+free5gc-upf-1-n4   17s
+free5gc-upf-1-n6   17s
+```
+
+then push the UPF package:
+
+```sh
+kpt alpha rpkg propose <UPF package> -ndefault
+kpt alpha rpkg approve <UPF package> -ndefault
+```
+
+On the edge cluster, verify that UPF is running:
+
+```sh
+$ kubectl get all -n upf-1
+NAME                                 READY   STATUS    RESTARTS   AGE
+pod/free5gc-upf-1-78c67dc499-z7fk2   1/1     Running   0          11s
+
+NAME                            READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/free5gc-upf-1   1/1     1            1           11s
+
+NAME                                       DESIRED   CURRENT   READY   AGE
+replicaset.apps/free5gc-upf-1-78c67dc499   1         1         1       11s
+```
 
 ## License
 
