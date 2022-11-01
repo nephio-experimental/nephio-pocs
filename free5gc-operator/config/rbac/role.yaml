@@ -6,7 +6,7 @@ metadata:
   name: manager-role
 rules:
 - apiGroups:
-  - batch.nfdeploy.nephio.io
+  - nfdeploy.nephio.io
   resources:
   - upfdeploys
   verbs:
@@ -18,13 +18,13 @@ rules:
   - update
   - watch
 - apiGroups:
-  - batch.nfdeploy.nephio.io
+  - nfdeploy.nephio.io
   resources:
   - upfdeploys/finalizers
   verbs:
   - update
 - apiGroups:
-  - batch.nfdeploy.nephio.io
+  - nfdeploy.nephio.io
   resources:
   - upfdeploys/status
   verbs:
