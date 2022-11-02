@@ -244,9 +244,12 @@ func free5gcUpfCreateConfigmap(upfDeploy *upfdeployv1alpha1.UpfDeploy) (*apiv1.C
 	return configMap, nil
 }
 
-//+kubebuilder:rbac:groups=batch.nfdeploy.nephio.io,resources=upfdeploys,verbs=get;list;watch;create;update;patch;delete
-//+kubebuilder:rbac:groups=batch.nfdeploy.nephio.io,resources=upfdeploys/status,verbs=get;update;patch
-//+kubebuilder:rbac:groups=batch.nfdeploy.nephio.io,resources=upfdeploys/finalizers,verbs=update
+//+kubebuilder:rbac:groups=nfdeploy.nephio.io,resources=upfdeploys,verbs=get;list;watch;create;update;patch;delete
+//+kubebuilder:rbac:groups=nfdeploy.nephio.io,resources=upfdeploys/status,verbs=get;update;patch
+//+kubebuilder:rbac:groups=nfdeploy.nephio.io,resources=upfdeploys/finalizers,verbs=update
+//+kubebuilder:rbac:groups=apps,resources=deployments,verbs=get;list;watch;create;update;patch;delete
+//+kubebuilder:rbac:groups=apps,resources=deployments/status,verbs=get
+//+kubebuilder:rbac:groups="",resources=configmaps,verbs=get;list;watch;create;update;patch;delete
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
