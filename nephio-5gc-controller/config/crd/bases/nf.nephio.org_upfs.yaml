@@ -1,0 +1,145 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.9.2
+  creationTimestamp: null
+  name: upfs.nf.nephio.org
+spec:
+  group: nf.nephio.org
+  names:
+    kind: Upf
+    listKind: UpfList
+    plural: upfs
+    singular: upf
+  scope: Namespaced
+  versions:
+  - name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: Upf is the Schema for the upfs API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: UpfSpec defines the desired state of Upf
+            properties:
+              clustername:
+                type: string
+              n3:
+                properties:
+                  endpoints:
+                    items:
+                      properties:
+                        gwv4addr:
+                          type: string
+                        ipv4Addr:
+                          items:
+                            type: string
+                          type: array
+                      required:
+                      - gwv4addr
+                      - ipv4Addr
+                      type: object
+                    type: array
+                required:
+                - endpoints
+                type: object
+              n4:
+                properties:
+                  endpoints:
+                    items:
+                      properties:
+                        gwv4addr:
+                          type: string
+                        ipv4Addr:
+                          items:
+                            type: string
+                          type: array
+                      required:
+                      - gwv4addr
+                      - ipv4Addr
+                      type: object
+                    type: array
+                required:
+                - endpoints
+                type: object
+              n6:
+                properties:
+                  endpoints:
+                    additionalProperties:
+                      properties:
+                        ipaddrpool:
+                          description: UE address pool
+                          type: string
+                        ipendpoints:
+                          properties:
+                            gwv4addr:
+                              type: string
+                            ipv4Addr:
+                              items:
+                                type: string
+                              type: array
+                          required:
+                          - gwv4addr
+                          - ipv4Addr
+                          type: object
+                      required:
+                      - ipaddrpool
+                      - ipendpoints
+                      type: object
+                    description: map of {dnn-name} to
+                    type: object
+                required:
+                - endpoints
+                type: object
+              n9:
+                properties:
+                  endpoints:
+                    items:
+                      properties:
+                        gwv4addr:
+                          type: string
+                        ipv4Addr:
+                          items:
+                            type: string
+                          type: array
+                      required:
+                      - gwv4addr
+                      - ipv4Addr
+                      type: object
+                    type: array
+                required:
+                - endpoints
+                type: object
+              namespace:
+                type: string
+              parent:
+                type: string
+            required:
+            - clustername
+            - n3
+            - n4
+            - n6
+            - namespace
+            - parent
+            type: object
+          status:
+            description: UpfStatus defines the observed state of Upf
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

@@ -20,16 +20,44 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
-// NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
+type NfEndpoint struct {
+	Ipv4Addr []string `json:"ipv4Addr"`
+	Gwv4Addr string   `json:"gwv4addr"`
+}
+
+type UpfN3 struct {
+	Endpoints []NfEndpoint `json:"endpoints"`
+}
+
+type UpfN4 struct {
+	Endpoints []NfEndpoint `json:"endpoints"`
+}
+
+type N6Endpoint struct {
+	IpEndpoints NfEndpoint `json:"ipendpoints"`
+	// UE address pool
+	IpAddrPool string `json:"ipaddrpool"`
+}
+
+type UpfN6 struct {
+	// map of {dnn-name} to
+	Endpoints map[string]N6Endpoint `json:"endpoints"`
+}
+
+type UpfN9 struct {
+	Endpoints []NfEndpoint `json:"endpoints"`
+}
 
 // UpfSpec defines the desired state of Upf
 type UpfSpec struct {
-	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
-
-	// Foo is an example field of Upf. Edit upf_types.go to remove/update
-	Foo string `json:"foo,omitempty"`
+	UpfClassName string `json:"parent"`
+	ClusterName  string `json:"clustername"`
+	Namespace    string `json:"namespace"`
+	N3           UpfN3  `json:"n3"`
+	N4           UpfN4  `json:"n4"`
+	N6           UpfN6  `json:"n6"`
+	// +optional
+	N9 UpfN9 `json:"n9"`
 }
 
 // UpfStatus defines the observed state of Upf

@@ -20,19 +20,20 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
-// NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
-
-// UpfClassSpec defines the desired state of UpfClass
+// UpfclassSpec defines the desired state of Upfclass
 type UpfClassSpec struct {
-	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
-
-	// Foo is an example field of UpfClass. Edit upfclass_types.go to remove/update
-	Foo string `json:"foo,omitempty"`
+	//Controller         string   `json:"controller"`
+	UplinkThroughput   string `json:"uplinkThroughput"`
+	DownlinkThroughput string `json:"downlinkThroughput"`
+	N3Endpoints        int    `json:"n3endpoints"`
+	N4Endpoints        int    `json:"n4endpoints"`
+	N6Endpoints        int    `json:"n6endpoints"`
+	N9Endpoints        int    `json:"n9endpoints"`
+	// +optional
+	Dnn []string `json:"dnn"`
 }
 
-// UpfClassStatus defines the observed state of UpfClass
+// UpfclassStatus defines the observed state of Upfclass
 type UpfClassStatus struct {
 	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
@@ -40,8 +41,9 @@ type UpfClassStatus struct {
 
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
+//+kubebuilder:resource:path=upfclasses,scope=Cluster
 
-// UpfClass is the Schema for the upfclasses API
+// Upfclass is the Schema for the upfclasses API
 type UpfClass struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
@@ -52,7 +54,7 @@ type UpfClass struct {
 
 //+kubebuilder:object:root=true
 
-// UpfClassList contains a list of UpfClass
+// UpfclassList contains a list of Upfclass
 type UpfClassList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`

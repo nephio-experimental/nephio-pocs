@@ -1,0 +1,33 @@
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  creationTimestamp: null
+  name: manager-role
+rules:
+- apiGroups:
+  - nf.nephio.org
+  resources:
+  - fivegcoretopologies
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - nf.nephio.org
+  resources:
+  - fivegcoretopologies/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - nf.nephio.org
+  resources:
+  - fivegcoretopologies/status
+  verbs:
+  - get
+  - patch
+  - update
