@@ -1,0 +1,27 @@
+# permissions for end users to view fivegcoretopologies.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app.kubernetes.io/name: clusterrole
+    app.kubernetes.io/instance: fivegcoretopology-viewer-role
+    app.kubernetes.io/component: rbac
+    app.kubernetes.io/created-by: nephio-5gc-controller
+    app.kubernetes.io/part-of: nephio-5gc-controller
+    app.kubernetes.io/managed-by: kustomize
+  name: fivegcoretopology-viewer-role
+rules:
+- apiGroups:
+  - nf.nephio.org
+  resources:
+  - fivegcoretopologies
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - nf.nephio.org
+  resources:
+  - fivegcoretopologies/status
+  verbs:
+  - get

@@ -1,0 +1,12 @@
+apiVersion: nf.nephio.org/v1alpha1
+kind: FiveGCoreTopology
+metadata:
+  labels:
+    app.kubernetes.io/name: fivegcoretopology
+    app.kubernetes.io/instance: fivegcoretopology-sample
+    app.kubernetes.io/part-of: nephio-5gc-controller
+    app.kuberentes.io/managed-by: kustomize
+    app.kubernetes.io/created-by: nephio-5gc-controller
+  name: fivegcoretopology-sample
+spec:
+  # TODO(user): Add fields here
