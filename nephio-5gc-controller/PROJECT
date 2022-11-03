@@ -1,0 +1,7 @@
+domain: nephio.org
+layout:
+- go.kubebuilder.io/v3
+multigroup: true
+projectName: nephio-5gc-controller
+repo: github.com/nephio-project/nephio-pocs/nephio-5gc-controller
+version: "3"
