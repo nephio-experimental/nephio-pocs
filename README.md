@@ -17,6 +17,12 @@ to Nephio's goals:
   Allows for network functions that are not designed to be cloud native
   (do not self-configure or self-orchestrate) to work better in a cloud native
   environment by handling dependency discovery and configuration.
+* [ENO](eno/):
+  External Network Operator (ENO) is a framework that enables network automation in Kubernetes.
+  Exposes a common API which allows the dynamic orchestration of networks on cluster and fabric
+  level and therefore gives the ability to applications to consume a high number of different networks.
+  ENO intends to run in workload clusters under Nephio context and will be responsible for the network
+  provision inside the cluster as well as in the fabric.
 * [free5GC Operator](free5gc-operator/):
   Deploys and manages [free5GC](https://www.free5gc.org/)'s AMF, SMF, and UPF components on
   Kubernetes.
