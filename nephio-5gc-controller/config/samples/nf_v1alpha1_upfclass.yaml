@@ -1,0 +1,12 @@
+apiVersion: nf.nephio.org/v1alpha1
+kind: UpfClass
+metadata:
+  labels:
+    app.kubernetes.io/name: upfclass
+    app.kubernetes.io/instance: upfclass-sample
+    app.kubernetes.io/part-of: nephio-5gc-controller
+    app.kuberentes.io/managed-by: kustomize
+    app.kubernetes.io/created-by: nephio-5gc-controller
+  name: upfclass-sample
+spec:
+  # TODO(user): Add fields here

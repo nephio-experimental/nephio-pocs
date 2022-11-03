@@ -1,0 +1,27 @@
+# permissions for end users to view upfs.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app.kubernetes.io/name: clusterrole
+    app.kubernetes.io/instance: upf-viewer-role
+    app.kubernetes.io/component: rbac
+    app.kubernetes.io/created-by: nephio-5gc-controller
+    app.kubernetes.io/part-of: nephio-5gc-controller
+    app.kubernetes.io/managed-by: kustomize
+  name: upf-viewer-role
+rules:
+- apiGroups:
+  - nf.nephio.org
+  resources:
+  - upfs
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - nf.nephio.org
+  resources:
+  - upfs/status
+  verbs:
+  - get
