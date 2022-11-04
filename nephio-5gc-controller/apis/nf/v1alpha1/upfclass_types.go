@@ -17,18 +17,18 @@ limitations under the License.
 package v1alpha1
 
 import (
+	automationv1alpha1 "github.com/nephio-project/nephio-controller-poc/apis/automation/v1alpha1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-        automationv1alpha1 "github.com/nephio-project/nephio-controller-poc/apis/automation/v1alpha1"
 )
 
 // UpfClassSpec defines the desired state of UpfClass
 type UpfClassSpec struct {
 	PackageRef automationv1alpha1.PackageRevisionReference `json:"packageRef"`
 
-	N3Endpoints        int    `json:"n3endpoints"`
-	N4Endpoints        int    `json:"n4endpoints"`
-	N6Endpoints        int    `json:"n6endpoints"`
-	N9Endpoints        int    `json:"n9endpoints"`
+	N3Endpoints int `json:"n3endpoints"`
+	N4Endpoints int `json:"n4endpoints"`
+	N6Endpoints int `json:"n6endpoints"`
+	N9Endpoints int `json:"n9endpoints"`
 
 	// +optional
 	Dnn []string `json:"dnn"`
