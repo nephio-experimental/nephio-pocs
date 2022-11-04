@@ -18,7 +18,7 @@ spec:
   - name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: Upfclass is the Schema for the upfclasses API
+        description: UpfClass is the Schema for the upfclasses API
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation
@@ -33,14 +33,12 @@ spec:
           metadata:
             type: object
           spec:
-            description: UpfclassSpec defines the desired state of Upfclass
+            description: UpfClassSpec defines the desired state of UpfClass
             properties:
               dnn:
                 items:
                   type: string
                 type: array
-              downlinkThroughput:
-                type: string
               n3endpoints:
                 type: integer
               n4endpoints:
@@ -49,19 +47,47 @@ spec:
                 type: integer
               n9endpoints:
                 type: integer
-              uplinkThroughput:
-                description: Controller         string   `json:"controller"`
-                type: string
+              packageRef:
+                description: PackageRevisionReference is used to reference a particular
+                  package revision.
+                properties:
+                  namespace:
+                    description: Namespace is the namespace for both the repository
+                      and package revision
+                    type: string
+                  packageName:
+                    description: PackageName is the name of the package for the revision
+                    type: string
+                  repository:
+                    description: Repository is the name of the repository containing
+                      the package
+                    type: string
+                  revision:
+                    description: Revision is the specific version number of the revision
+                      of the package
+                    type: string
+                required:
+                - packageName
+                - repository
+                - revision
+                type: object
             required:
-            - downlinkThroughput
             - n3endpoints
             - n4endpoints
             - n6endpoints
             - n9endpoints
-            - uplinkThroughput
+            - packageRef
             type: object
           status:
-            description: UpfclassStatus defines the observed state of Upfclass
+            description: 'UpfClassStatus defines the observed state of UpfClass TODO:
+              we need a controller to validate that the packageRef is valid and that
+              the underlying package is Ready'
+            properties:
+              ready:
+                description: Specifies whether the UpfClass is ready to be used
+                type: boolean
+            required:
+            - ready
             type: object
         type: object
     served: true

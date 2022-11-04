@@ -18,32 +18,35 @@ package v1alpha1
 
 import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+        automationv1alpha1 "github.com/nephio-project/nephio-controller-poc/apis/automation/v1alpha1"
 )
 
-// UpfclassSpec defines the desired state of Upfclass
+// UpfClassSpec defines the desired state of UpfClass
 type UpfClassSpec struct {
-	//Controller         string   `json:"controller"`
-	UplinkThroughput   string `json:"uplinkThroughput"`
-	DownlinkThroughput string `json:"downlinkThroughput"`
+	PackageRef automationv1alpha1.PackageRevisionReference `json:"packageRef"`
+
 	N3Endpoints        int    `json:"n3endpoints"`
 	N4Endpoints        int    `json:"n4endpoints"`
 	N6Endpoints        int    `json:"n6endpoints"`
 	N9Endpoints        int    `json:"n9endpoints"`
+
 	// +optional
 	Dnn []string `json:"dnn"`
 }
 
-// UpfclassStatus defines the observed state of Upfclass
+// UpfClassStatus defines the observed state of UpfClass
+// TODO: we need a controller to validate that the packageRef is
+// valid and that the underlying package is Ready
 type UpfClassStatus struct {
-	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
+	// Specifies whether the UpfClass is ready to be used
+	Ready bool `json:"ready"`
 }
 
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
 //+kubebuilder:resource:path=upfclasses,scope=Cluster
 
-// Upfclass is the Schema for the upfclasses API
+// UpfClass is the Schema for the upfclasses API
 type UpfClass struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
@@ -54,7 +57,7 @@ type UpfClass struct {
 
 //+kubebuilder:object:root=true
 
-// UpfclassList contains a list of Upfclass
+// UpfClassList contains a list of UpfClass
 type UpfClassList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`

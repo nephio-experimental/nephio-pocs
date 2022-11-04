@@ -22,7 +22,7 @@ import (
 
 type NfEndpoint struct {
 	Ipv4Addr []string `json:"ipv4Addr"`
-	Gwv4Addr string   `json:"gwv4addr"`
+	Gwv4Addr *string   `json:"gwv4addr,omitempty"`
 }
 
 type UpfN3 struct {
@@ -34,14 +34,14 @@ type UpfN4 struct {
 }
 
 type N6Endpoint struct {
+	Dnn string `json:"dnn"`
 	IpEndpoints NfEndpoint `json:"ipendpoints"`
 	// UE address pool
 	IpAddrPool string `json:"ipaddrpool"`
 }
 
 type UpfN6 struct {
-	// map of {dnn-name} to
-	Endpoints map[string]N6Endpoint `json:"endpoints"`
+	Endpoints []N6Endpoint `json:"endpoints"`
 }
 
 type UpfN9 struct {
@@ -50,20 +50,18 @@ type UpfN9 struct {
 
 // UpfSpec defines the desired state of Upf
 type UpfSpec struct {
-	UpfClassName string `json:"parent"`
-	ClusterName  string `json:"clustername"`
-	Namespace    string `json:"namespace"`
+	UpfClassName string `json:"upfClassName"`
+	UplinkThroughput   string `json:"uplinkThroughput"`
+	DownlinkThroughput string `json:"downlinkThroughput"`
 	N3           UpfN3  `json:"n3"`
 	N4           UpfN4  `json:"n4"`
 	N6           UpfN6  `json:"n6"`
 	// +optional
-	N9 UpfN9 `json:"n9"`
+	N9 *UpfN9 `json:"n9,omitempty"`
 }
 
 // UpfStatus defines the observed state of Upf
 type UpfStatus struct {
-	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
 }
 
 //+kubebuilder:object:root=true

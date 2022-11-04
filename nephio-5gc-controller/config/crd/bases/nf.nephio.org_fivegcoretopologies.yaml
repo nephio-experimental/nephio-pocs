@@ -35,13 +35,121 @@ spec:
           spec:
             description: FiveGCoreTopologySpec defines the desired state of FiveGCoreTopology
             properties:
-              foo:
-                description: Foo is an example field of FiveGCoreTopology. Edit fivegcoretopology_types.go
-                  to remove/update
-                type: string
+              upfs:
+                description: Upfs lists different UPF configurations needed in this
+                  topology
+                items:
+                  description: UpfSpec defines the desired state of Upf
+                  properties:
+                    downlinkThroughput:
+                      type: string
+                    n3:
+                      properties:
+                        endpoints:
+                          items:
+                            properties:
+                              gwv4addr:
+                                type: string
+                              ipv4Addr:
+                                items:
+                                  type: string
+                                type: array
+                            required:
+                            - ipv4Addr
+                            type: object
+                          type: array
+                      required:
+                      - endpoints
+                      type: object
+                    n4:
+                      properties:
+                        endpoints:
+                          items:
+                            properties:
+                              gwv4addr:
+                                type: string
+                              ipv4Addr:
+                                items:
+                                  type: string
+                                type: array
+                            required:
+                            - ipv4Addr
+                            type: object
+                          type: array
+                      required:
+                      - endpoints
+                      type: object
+                    n6:
+                      properties:
+                        endpoints:
+                          items:
+                            properties:
+                              dnn:
+                                type: string
+                              ipaddrpool:
+                                description: UE address pool
+                                type: string
+                              ipendpoints:
+                                properties:
+                                  gwv4addr:
+                                    type: string
+                                  ipv4Addr:
+                                    items:
+                                      type: string
+                                    type: array
+                                required:
+                                - ipv4Addr
+                                type: object
+                            required:
+                            - dnn
+                            - ipaddrpool
+                            - ipendpoints
+                            type: object
+                          type: array
+                      required:
+                      - endpoints
+                      type: object
+                    n9:
+                      properties:
+                        endpoints:
+                          items:
+                            properties:
+                              gwv4addr:
+                                type: string
+                              ipv4Addr:
+                                items:
+                                  type: string
+                                type: array
+                            required:
+                            - ipv4Addr
+                            type: object
+                          type: array
+                      required:
+                      - endpoints
+                      type: object
+                    upfClassName:
+                      type: string
+                    uplinkThroughput:
+                      type: string
+                  required:
+                  - downlinkThroughput
+                  - n3
+                  - n4
+                  - n6
+                  - upfClassName
+                  - uplinkThroughput
+                  type: object
+                type: array
             type: object
           status:
             description: FiveGCoreTopologyStatus defines the observed state of FiveGCoreTopology
+            properties:
+              upfStatuses:
+                description: UpfStatuses lists the deployment status of each UPF configuration
+                items:
+                  description: UpfStatus defines the observed state of Upf
+                  type: object
+                type: array
             type: object
         type: object
     served: true

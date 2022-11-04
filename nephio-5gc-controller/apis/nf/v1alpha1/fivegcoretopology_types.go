@@ -25,17 +25,14 @@ import (
 
 // FiveGCoreTopologySpec defines the desired state of FiveGCoreTopology
 type FiveGCoreTopologySpec struct {
-	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
-
-	// Foo is an example field of FiveGCoreTopology. Edit fivegcoretopology_types.go to remove/update
-	Foo string `json:"foo,omitempty"`
+	// Upfs lists different UPF configurations needed in this topology
+	Upfs []UpfSpec `json:"upfs,omitempty"`
 }
 
 // FiveGCoreTopologyStatus defines the observed state of FiveGCoreTopology
 type FiveGCoreTopologyStatus struct {
-	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
+	// UpfStatuses lists the deployment status of each UPF configuration
+	UpfStatuses []UpfStatus `json:"upfStatuses,omitempty"`
 }
 
 //+kubebuilder:object:root=true

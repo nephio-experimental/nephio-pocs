@@ -35,7 +35,7 @@ spec:
           spec:
             description: UpfSpec defines the desired state of Upf
             properties:
-              clustername:
+              downlinkThroughput:
                 type: string
               n3:
                 properties:
@@ -49,7 +49,6 @@ spec:
                             type: string
                           type: array
                       required:
-                      - gwv4addr
                       - ipv4Addr
                       type: object
                     type: array
@@ -68,7 +67,6 @@ spec:
                             type: string
                           type: array
                       required:
-                      - gwv4addr
                       - ipv4Addr
                       type: object
                     type: array
@@ -78,8 +76,10 @@ spec:
               n6:
                 properties:
                   endpoints:
-                    additionalProperties:
+                    items:
                       properties:
+                        dnn:
+                          type: string
                         ipaddrpool:
                           description: UE address pool
                           type: string
@@ -92,15 +92,14 @@ spec:
                                 type: string
                               type: array
                           required:
-                          - gwv4addr
                           - ipv4Addr
                           type: object
                       required:
+                      - dnn
                       - ipaddrpool
                       - ipendpoints
                       type: object
-                    description: map of {dnn-name} to
-                    type: object
+                    type: array
                 required:
                 - endpoints
                 type: object
@@ -116,24 +115,23 @@ spec:
                             type: string
                           type: array
                       required:
-                      - gwv4addr
                       - ipv4Addr
                       type: object
                     type: array
                 required:
                 - endpoints
                 type: object
-              namespace:
+              upfClassName:
                 type: string
-              parent:
+              uplinkThroughput:
                 type: string
             required:
-            - clustername
+            - downlinkThroughput
             - n3
             - n4
             - n6
-            - namespace
-            - parent
+            - upfClassName
+            - uplinkThroughput
             type: object
           status:
             description: UpfStatus defines the observed state of Upf
