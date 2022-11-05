@@ -1,0 +1,33 @@
+domain: nephio.org
+layout:
+- go.kubebuilder.io/v3
+multigroup: true
+projectName: nephio-5gc-controller
+repo: github.com/nephio-project/nephio-pocs/nephio-5gc-controller
+resources:
+- api:
+    crdVersion: v1
+    namespaced: true
+  controller: true
+  domain: nephio.org
+  group: nf
+  kind: FiveGCoreTopology
+  path: github.com/nephio-project/nephio-pocs/nephio-5gc-controller/apis/nf/v1alpha1
+  version: v1alpha1
+- api:
+    crdVersion: v1
+    namespaced: true
+  domain: nephio.org
+  group: nf
+  kind: Upf
+  path: github.com/nephio-project/nephio-pocs/nephio-5gc-controller/apis/nf/v1alpha1
+  version: v1alpha1
+- api:
+    crdVersion: v1
+    namespaced: true
+  domain: nephio.org
+  group: nf
+  kind: UpfClass
+  path: github.com/nephio-project/nephio-pocs/nephio-5gc-controller/apis/nf/v1alpha1
+  version: v1alpha1
+version: "3"
