@@ -17,30 +17,30 @@ limitations under the License.
 package v1alpha1
 
 import (
+	resource "k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-
 type InterfaceConfig struct {
-	Name   string   `json:"name"`
-	IpAddr []string `json:"ipAddr"`
-	GwAddr []string `json:"gwAddr"`
+	Name      string `json:"name"`
+	IP        string `json:"ip"`
+	GatewayIP string `json:"gatewayIP"`
 }
 
 type UPFCapacity struct {
-	UplinkThroughput   string `json:"uplinkThroughput"`
-	DownlinkThroughput string `json:"downlinkThroughput"`
+	UplinkThroughput   resource.Quantity `json:"uplinkThroughput"`
+	DownlinkThroughput resource.Quantity `json:"downlinkThroughput"`
 }
 
 type N6InterfaceConfig struct {
-	Dnn        string          `json:"dnn"`
-	Interface  InterfaceConfig `json:"interface"`
-	IpAddrPool string          `json:"ipAddrPool"`
+	// Dnn is the Data Network Name
+	DNN       string          `json:"dnn"`
+	Interface InterfaceConfig `json:"interface"`
+	UEIPPool  string          `json:"ueIPPool"`
 }
 
 // UPFDeploymentSpec specifies config parameters for UPF
 type UPFDeploymentSpec struct {
-	ImagePaths   map[string]string   `json:"imagePaths,omitempty"`
 	Capacity     UPFCapacity         `json:"capacity,omitempty"`
 	N3Interfaces []InterfaceConfig   `json:"n3Interfaces,omitempty"`
 	N4Interfaces []InterfaceConfig   `json:"n4Interfaces,omitempty"`
@@ -48,7 +48,6 @@ type UPFDeploymentSpec struct {
 	// +optional
 	N9Interfaces []InterfaceConfig `json:"n9Interfaces,omitempty"`
 }
-
 
 type UPFDeploymentStatus struct {
 	ComputeStatus   string      `json:"computestatus,omitempty"`
