@@ -34,7 +34,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
 
-	upfdeployv1alpha1 "nephio.io/nfdeploy/api/v1alpha1"
+	upfdeployv1alpha1 "github.com/nephio-project/nephio-pocs/nephio-5gc-controller/apis/nf/v1alpha1"
 )
 
 // UpfDeployReconciler reconciles a UpfDeploy object

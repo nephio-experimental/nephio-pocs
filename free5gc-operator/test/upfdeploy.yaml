@@ -1,6 +1,5 @@
----
-apiVersion: nfdeploy.nephio.io/v1alpha1
-kind: UpfDeploy
+apiVersion: nf.nephio.org/v1alpha1
+kind: UPFDeployment
 metadata:
   name: free5gc-upf-1
   namespace: upf-1
@@ -29,5 +28,12 @@ spec:
   capacity:
     downlinkThroughput: 10Gb
     uplinkThroughput: 1Gb
+---
+apiVersion: free5gc.nephio.org/v1alpha1
+kind: ImageConfig
+metadata:
+  name: free5gc-upf-1
+  namespace: upf-1
+spec:
   imagePaths:
     upf: towards5gs/free5gc-upf:v3.1.1
