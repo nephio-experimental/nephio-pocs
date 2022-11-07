@@ -27,7 +27,7 @@ type InterfaceConfig struct {
 	GwAddr []string `json:"gwAddr"`
 }
 
-type UpfCapacity struct {
+type UPFCapacity struct {
 	UplinkThroughput   string `json:"uplinkThroughput"`
 	DownlinkThroughput string `json:"downlinkThroughput"`
 }
@@ -38,10 +38,10 @@ type N6InterfaceConfig struct {
 	IpAddrPool string          `json:"ipAddrPool"`
 }
 
-// UpfDeploySpec specifies config parameters for UPF
-type UpfDeploySpec struct {
+// UPFDeploymentSpec specifies config parameters for UPF
+type UPFDeploymentSpec struct {
 	ImagePaths   map[string]string   `json:"imagePaths,omitempty"`
-	Capacity     UpfCapacity         `json:"capacity,omitempty"`
+	Capacity     UPFCapacity         `json:"capacity,omitempty"`
 	N3Interfaces []InterfaceConfig   `json:"n3Interfaces,omitempty"`
 	N4Interfaces []InterfaceConfig   `json:"n4Interfaces,omitempty"`
 	N6Interfaces []N6InterfaceConfig `json:"n6Interfaces,omitempty"`
@@ -50,7 +50,7 @@ type UpfDeploySpec struct {
 }
 
 
-type UpfDeployStatus struct {
+type UPFDeploymentStatus struct {
 	ComputeStatus   string      `json:"computestatus,omitempty"`
 	ComputeUpTime   metav1.Time `json:"computeuptime,omitempty"`
 	OperationStatus string      `json:"operationstatus,omitempty"`
@@ -60,24 +60,24 @@ type UpfDeployStatus struct {
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
 
-// UpfDeploy is the Schema for the upfdeploys API
-type UpfDeploy struct {
+// UPFDeployment is the Schema for the upfdeployments API
+type UPFDeployment struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec   UpfDeploySpec   `json:"spec,omitempty"`
-	Status UpfDeployStatus `json:"status,omitempty"`
+	Spec   UPFDeploymentSpec   `json:"spec,omitempty"`
+	Status UPFDeploymentStatus `json:"status,omitempty"`
 }
 
 //+kubebuilder:object:root=true
 
-// UpfDeployList contains a list of UpfDeploy
-type UpfDeployList struct {
+// UPFDeploymentList contains a list of UPFDeployment
+type UPFDeploymentList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
-	Items           []UpfDeploy `json:"items"`
+	Items           []UPFDeployment `json:"items"`
 }
 
 func init() {
-	SchemeBuilder.Register(&UpfDeploy{}, &UpfDeployList{})
+	SchemeBuilder.Register(&UPFDeployment{}, &UPFDeploymentList{})
 }
