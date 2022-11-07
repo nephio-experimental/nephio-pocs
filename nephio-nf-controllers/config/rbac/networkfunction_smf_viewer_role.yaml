@@ -1,0 +1,20 @@
+# permissions for end users to view smfs.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: smf-viewer-role
+rules:
+- apiGroups:
+  - networkfunction.nephio.io
+  resources:
+  - smfs
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - networkfunction.nephio.io
+  resources:
+  - smfs/status
+  verbs:
+  - get

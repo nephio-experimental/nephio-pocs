@@ -1,0 +1,6 @@
+apiVersion: networkfunction.nephio.io/v1alpha1
+kind: SnssaiInfo
+metadata:
+  name: snssaiinfo-sample
+spec:
+  # TODO(user): Add fields here

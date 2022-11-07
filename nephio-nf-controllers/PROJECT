@@ -48,4 +48,29 @@ resources:
   kind: RepoConfig
   path: nephio.io/networkfunctions/apis/baseconfig/v1alpha1
   version: v1alpha1
+- api:
+    crdVersion: v1
+    namespaced: true
+  domain: nephio.io
+  group: networkfunction
+  kind: SmfClass
+  path: nephio.io/networkfunctions/apis/networkfunction/v1alpha1
+  version: v1alpha1
+- api:
+    crdVersion: v1
+    namespaced: true
+  controller: true
+  domain: nephio.io
+  group: networkfunction
+  kind: Smf
+  path: nephio.io/networkfunctions/apis/networkfunction/v1alpha1
+  version: v1alpha1
+- api:
+    crdVersion: v1
+    namespaced: true
+  domain: nephio.io
+  group: networkfunction
+  kind: SnssaiInfo
+  path: nephio.io/networkfunctions/apis/networkfunction/v1alpha1
+  version: v1alpha1
 version: "3"

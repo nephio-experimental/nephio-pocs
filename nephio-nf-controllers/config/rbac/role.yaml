@@ -32,6 +32,32 @@ rules:
   - patch
   - update
 - apiGroups:
+  - networkfunction.nephio.io
+  resources:
+  - smfs
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - networkfunction.nephio.io
+  resources:
+  - smfs/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - networkfunction.nephio.io
+  resources:
+  - smfs/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
   - resources.nephio.io
   resources:
   - nfnetworkresources

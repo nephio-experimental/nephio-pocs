@@ -1,0 +1,20 @@
+# permissions for end users to view snssaiinfoes.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: snssaiinfo-viewer-role
+rules:
+- apiGroups:
+  - networkfunction.nephio.io
+  resources:
+  - snssaiinfoes
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - networkfunction.nephio.io
+  resources:
+  - snssaiinfoes/status
+  verbs:
+  - get

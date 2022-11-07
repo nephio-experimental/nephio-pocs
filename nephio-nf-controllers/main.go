@@ -35,7 +35,9 @@ import (
 
 	networkfunctionv1alpha1 "nephio.io/networkfunctions/api/v1alpha1"
 	baseconfigv1alpha1 "nephio.io/networkfunctions/apis/baseconfig/v1alpha1"
+	networkfunctionv1alpha1 "nephio.io/networkfunctions/apis/networkfunction/v1alpha1"
 	"nephio.io/networkfunctions/controllers"
+	networkfunctioncontrollers "nephio.io/networkfunctions/controllers/networkfunction"
 	//+kubebuilder:scaffold:imports
 )
 
@@ -121,6 +123,13 @@ func main() {
 		PorchClient: porchClient,
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "NfResource")
+		os.Exit(1)
+	}
+	if err = (&networkfunctioncontrollers.SmfReconciler{
+		Client: mgr.GetClient(),
+		Scheme: mgr.GetScheme(),
+	}).SetupWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "Smf")
 		os.Exit(1)
 	}
 	//+kubebuilder:scaffold:builder

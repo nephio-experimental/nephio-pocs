@@ -1,0 +1,24 @@
+# permissions for end users to edit smfclasses.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: smfclass-editor-role
+rules:
+- apiGroups:
+  - networkfunction.nephio.io
+  resources:
+  - smfclasses
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - networkfunction.nephio.io
+  resources:
+  - smfclasses/status
+  verbs:
+  - get
