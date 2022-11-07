@@ -33,6 +33,7 @@ import (
 
 	free5gcv1alpha1 "github.com/nephio-project/nephio-pocs/free5gc-operator/api/v1alpha1"
 	"github.com/nephio-project/nephio-pocs/free5gc-operator/controllers"
+	nfdeployv1alpha1 "github.com/nephio-project/nephio-pocs/nephio-5gc-controller/apis/nf/v1alpha1"
 	//+kubebuilder:scaffold:imports
 )
 
@@ -90,11 +91,11 @@ func main() {
 		os.Exit(1)
 	}
 
-	if err = (&controllers.UpfDeployReconciler{
+	if err = (&controllers.UPFDeploymentReconciler{
 		Client: mgr.GetClient(),
 		Scheme: mgr.GetScheme(),
 	}).SetupWithManager(mgr); err != nil {
-		setupLog.Error(err, "unable to create controller", "controller", "UpfDeploy")
+		setupLog.Error(err, "unable to create controller", "controller", "UPFDeployment")
 		os.Exit(1)
 	}
 	if err = (&controllers.ImageConfigReconciler{

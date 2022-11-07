@@ -2,6 +2,8 @@ module github.com/nephio-project/nephio-pocs/free5gc-operator
 
 go 1.18
 
+replace github.com/nephio-project/nephio-pocs/nephio-5gc-controller => ../nephio-5gc-controller
+
 require (
 	github.com/nephio-project/nephio-pocs/nephio-5gc-controller v0.0.0-20221107112405-b592de9eeb0c
 	k8s.io/api v0.25.0

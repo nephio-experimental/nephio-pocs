@@ -4,7 +4,7 @@
 
 package controllers
 
-var UpfWrapperScript string = `#!/bin/sh
+var UPFWrapperScript string = `#!/bin/sh
 
 ### Implement networking rules
 iptables -A FORWARD -j ACCEPT
