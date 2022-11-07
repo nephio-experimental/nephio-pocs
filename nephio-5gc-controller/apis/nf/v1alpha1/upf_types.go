@@ -20,66 +20,66 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-type UpfN3 struct {
+type UPFN3 struct {
 	Endpoints []Endpoint `json:"endpoints"`
 }
 
-type UpfN4 struct {
+type UPFN4 struct {
 	Endpoints []Endpoint `json:"endpoints"`
 }
 
 type N6Endpoint struct {
-	Dnn         string   `json:"dnn"`
-	IpEndpoints Endpoint `json:"ipendpoints"`
+	DNN         string   `json:"dnn"`
+	IPEndpoints Endpoint `json:"ipEndpoints"`
 	// UE address pool
-	IpAddrPool string `json:"ipaddrpool"`
+	UEIPPool string `json:"ueIPPool"`
 }
 
-type UpfN6 struct {
+type UPFN6 struct {
 	Endpoints []N6Endpoint `json:"endpoints"`
 }
 
-type UpfN9 struct {
+type UPFN9 struct {
 	Endpoints []Endpoint `json:"endpoints"`
 }
 
-// UpfSpec defines the desired state of Upf
-type UpfSpec struct {
-	UpfClassName       string `json:"upfClassName"`
+// UPFSpec defines the desired state of UPF
+type UPFSpec struct {
+	UPFClassName       string `json:"upfClassName"`
 	UplinkThroughput   string `json:"uplinkThroughput"`
 	DownlinkThroughput string `json:"downlinkThroughput"`
-	N3                 UpfN3  `json:"n3"`
-	N4                 UpfN4  `json:"n4"`
-	N6                 UpfN6  `json:"n6"`
+	N3                 UPFN3  `json:"n3"`
+	N4                 UPFN4  `json:"n4"`
+	N6                 UPFN6  `json:"n6"`
 	// +optional
-	N9 *UpfN9 `json:"n9,omitempty"`
+	N9 *UPFN9 `json:"n9,omitempty"`
 }
 
-// UpfStatus defines the observed state of Upf
-type UpfStatus struct {
+// UPFStatus defines the observed state of UPF
+type UPFStatus struct {
 }
 
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
 
-// Upf is the Schema for the upfs API
-type Upf struct {
+// UPF is the Schema for the upfs API
+type UPF struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec   UpfSpec   `json:"spec,omitempty"`
-	Status UpfStatus `json:"status,omitempty"`
+	Spec   UPFSpec   `json:"spec,omitempty"`
+	Status UPFStatus `json:"status,omitempty"`
 }
 
 //+kubebuilder:object:root=true
 
-// UpfList contains a list of Upf
-type UpfList struct {
+// UPFList contains a list of UPF
+type UPFList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
-	Items           []Upf `json:"items"`
+	Items           []UPF `json:"items"`
 }
 
 func init() {
-	SchemeBuilder.Register(&Upf{}, &UpfList{})
+	SchemeBuilder.Register(&UPF{}, &UPFList{})
 }

@@ -9,8 +9,8 @@ metadata:
 spec:
   group: nf.nephio.org
   names:
-    kind: UpfClass
-    listKind: UpfClassList
+    kind: UPFClass
+    listKind: UPFClassList
     plural: upfclasses
     singular: upfclass
   scope: Cluster
@@ -18,7 +18,7 @@ spec:
   - name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: UpfClass is the Schema for the upfclasses API
+        description: UPFClass is the Schema for the upfclasses API
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation
@@ -33,9 +33,9 @@ spec:
           metadata:
             type: object
           spec:
-            description: UpfClassSpec defines the desired state of UpfClass
+            description: UPFClassSpec defines the desired state of UPFClass
             properties:
-              dnn:
+              dnns:
                 items:
                   type: string
                 type: array
@@ -79,12 +79,12 @@ spec:
             - packageRef
             type: object
           status:
-            description: 'UpfClassStatus defines the observed state of UpfClass TODO:
+            description: 'UPFClassStatus defines the observed state of UPFClass TODO:
               we need a controller to validate that the packageRef is valid and that
               the underlying package is Ready'
             properties:
               ready:
-                description: Specifies whether the UpfClass is ready to be used
+                description: Specifies whether the UPFClass is ready to be used
                 type: boolean
             required:
             - ready

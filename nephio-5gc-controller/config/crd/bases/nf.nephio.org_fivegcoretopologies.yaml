@@ -36,10 +36,10 @@ spec:
             description: FiveGCoreTopologySpec defines the desired state of FiveGCoreTopology
             properties:
               upfs:
-                description: Upfs lists different UPF configurations needed in this
+                description: UPFs lists different UPF configurations needed in this
                   topology
                 items:
-                  description: UpfSpec defines the desired state of Upf
+                  description: UPFSpec defines the desired state of UPF
                   properties:
                     downlinkThroughput:
                       type: string
@@ -48,14 +48,14 @@ spec:
                         endpoints:
                           items:
                             properties:
-                              gwv4addr:
+                              gatewayIP:
                                 type: string
-                              ipv4Addr:
+                              ip:
                                 items:
                                   type: string
                                 type: array
                             required:
-                            - ipv4Addr
+                            - ip
                             type: object
                           type: array
                       required:
@@ -66,14 +66,14 @@ spec:
                         endpoints:
                           items:
                             properties:
-                              gwv4addr:
+                              gatewayIP:
                                 type: string
-                              ipv4Addr:
+                              ip:
                                 items:
                                   type: string
                                 type: array
                             required:
-                            - ipv4Addr
+                            - ip
                             type: object
                           type: array
                       required:
@@ -86,24 +86,24 @@ spec:
                             properties:
                               dnn:
                                 type: string
-                              ipaddrpool:
-                                description: UE address pool
-                                type: string
-                              ipendpoints:
+                              ipEndpoints:
                                 properties:
-                                  gwv4addr:
+                                  gatewayIP:
                                     type: string
-                                  ipv4Addr:
+                                  ip:
                                     items:
                                       type: string
                                     type: array
                                 required:
-                                - ipv4Addr
+                                - ip
                                 type: object
+                              ueIPPool:
+                                description: UE address pool
+                                type: string
                             required:
                             - dnn
-                            - ipaddrpool
-                            - ipendpoints
+                            - ipEndpoints
+                            - ueIPPool
                             type: object
                           type: array
                       required:
@@ -114,14 +114,14 @@ spec:
                         endpoints:
                           items:
                             properties:
-                              gwv4addr:
+                              gatewayIP:
                                 type: string
-                              ipv4Addr:
+                              ip:
                                 items:
                                   type: string
                                 type: array
                             required:
-                            - ipv4Addr
+                            - ip
                             type: object
                           type: array
                       required:
@@ -145,9 +145,9 @@ spec:
             description: FiveGCoreTopologyStatus defines the observed state of FiveGCoreTopology
             properties:
               upfStatuses:
-                description: UpfStatuses lists the deployment status of each UPF configuration
+                description: UPFStatuses lists the deployment status of each UPF configuration
                 items:
-                  description: UpfStatus defines the observed state of Upf
+                  description: UPFStatus defines the observed state of UPF
                   type: object
                 type: array
             type: object

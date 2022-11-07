@@ -17,6 +17,6 @@ limitations under the License.
 package v1alpha1
 
 type Endpoint struct {
-	Ipv4Addr []string `json:"ipv4Addr"`
-	Gwv4Addr *string  `json:"gwv4addr,omitempty"`
+	IP        []string `json:"ip"`
+	GatewayIP *string  `json:"gatewayIP,omitempty"`
 }
