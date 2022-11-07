@@ -56,30 +56,38 @@ spec:
               n3Interfaces:
                 items:
                   properties:
-                    gatewayIP:
-                      type: string
-                    ip:
-                      type: string
+                    gatewayIPs:
+                      items:
+                        type: string
+                      type: array
+                    ips:
+                      items:
+                        type: string
+                      type: array
                     name:
                       type: string
                   required:
-                  - gatewayIP
-                  - ip
+                  - gatewayIPs
+                  - ips
                   - name
                   type: object
                 type: array
               n4Interfaces:
                 items:
                   properties:
-                    gatewayIP:
-                      type: string
-                    ip:
-                      type: string
+                    gatewayIPs:
+                      items:
+                        type: string
+                      type: array
+                    ips:
+                      items:
+                        type: string
+                      type: array
                     name:
                       type: string
                   required:
-                  - gatewayIP
-                  - ip
+                  - gatewayIPs
+                  - ips
                   - name
                   type: object
                 type: array
@@ -91,15 +99,19 @@ spec:
                       type: string
                     interface:
                       properties:
-                        gatewayIP:
-                          type: string
-                        ip:
-                          type: string
+                        gatewayIPs:
+                          items:
+                            type: string
+                          type: array
+                        ips:
+                          items:
+                            type: string
+                          type: array
                         name:
                           type: string
                       required:
-                      - gatewayIP
-                      - ip
+                      - gatewayIPs
+                      - ips
                       - name
                       type: object
                     ueIPPool:
@@ -113,15 +125,19 @@ spec:
               n9Interfaces:
                 items:
                   properties:
-                    gatewayIP:
-                      type: string
-                    ip:
-                      type: string
+                    gatewayIPs:
+                      items:
+                        type: string
+                      type: array
+                    ips:
+                      items:
+                        type: string
+                      type: array
                     name:
                       type: string
                   required:
-                  - gatewayIP
-                  - ip
+                  - gatewayIPs
+                  - ips
                   - name
                   type: object
                 type: array

@@ -22,9 +22,9 @@ import (
 )
 
 type InterfaceConfig struct {
-	Name      string `json:"name"`
-	IP        string `json:"ip"`
-	GatewayIP string `json:"gatewayIP"`
+	Name       string   `json:"name"`
+	IPs        []string `json:"ips"`
+	GatewayIPs []string `json:"gatewayIPs"`
 }
 
 type UPFCapacity struct {
