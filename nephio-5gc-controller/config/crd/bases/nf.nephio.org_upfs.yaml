@@ -80,7 +80,7 @@ spec:
                       properties:
                         dnn:
                           type: string
-                        ipEndpoints:
+                        ipEndpoint:
                           properties:
                             gatewayIP:
                               type: string
@@ -96,7 +96,7 @@ spec:
                           type: string
                       required:
                       - dnn
-                      - ipEndpoints
+                      - ipEndpoint
                       - ueIPPool
                       type: object
                     type: array
