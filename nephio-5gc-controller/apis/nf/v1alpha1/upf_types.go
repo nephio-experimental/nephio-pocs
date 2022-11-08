@@ -20,39 +20,22 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-type UPFN3 struct {
-	Endpoints []Endpoint `json:"endpoints"`
-}
-
-type UPFN4 struct {
-	Endpoints []Endpoint `json:"endpoints"`
-}
-
 type N6Endpoint struct {
-	DNN        string   `json:"dnn"`
-	IPEndpoint Endpoint `json:"ipEndpoint"`
+	DNN      string   `json:"dnn"`
+	Endpoint Endpoint `json:"endpoint"`
 	// UE address pool
-	UEIPPool string `json:"ueIPPool"`
-}
-
-type UPFN6 struct {
-	Endpoints []N6Endpoint `json:"endpoints"`
-}
-
-type UPFN9 struct {
-	Endpoints []Endpoint `json:"endpoints"`
+	UEPool Pool `json:"uePool"`
 }
 
 // UPFSpec defines the desired state of UPF
 type UPFSpec struct {
-	UPFClassName       string `json:"upfClassName"`
-	UplinkThroughput   string `json:"uplinkThroughput"`
-	DownlinkThroughput string `json:"downlinkThroughput"`
-	N3                 UPFN3  `json:"n3"`
-	N4                 UPFN4  `json:"n4"`
-	N6                 UPFN6  `json:"n6"`
+	UPFClassName string       `json:"upfClassName"`
+	Capacity     UPFCapacity  `json:"capacity"`
+	N3           []Endpoint   `json:"n3"`
+	N4           []Endpoint   `json:"n4"`
+	N6           []N6Endpoint `json:"n6"`
 	// +optional
-	N9 *UPFN9 `json:"n9,omitempty"`
+	N9 []Endpoint `json:"n9,omitempty"`
 }
 
 // UPFStatus defines the observed state of UPF

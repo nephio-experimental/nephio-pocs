@@ -35,103 +35,109 @@ spec:
           spec:
             description: UPFSpec defines the desired state of UPF
             properties:
-              downlinkThroughput:
-                type: string
+              capacity:
+                properties:
+                  downlinkThroughput:
+                    anyOf:
+                    - type: integer
+                    - type: string
+                    pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                    x-kubernetes-int-or-string: true
+                  uplinkThroughput:
+                    anyOf:
+                    - type: integer
+                    - type: string
+                    pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                    x-kubernetes-int-or-string: true
+                required:
+                - downlinkThroughput
+                - uplinkThroughput
+                type: object
               n3:
-                properties:
-                  endpoints:
-                    items:
-                      properties:
-                        gatewayIP:
-                          type: string
-                        ip:
-                          items:
-                            type: string
-                          type: array
-                      required:
-                      - ip
-                      type: object
-                    type: array
-                required:
-                - endpoints
-                type: object
+                items:
+                  properties:
+                    networkInstance:
+                      description: NetworkInstance identifies the layer 3 address
+                        space for IPAM
+                      type: string
+                    networkName:
+                      description: NetworkName identifies the specific network to
+                        use for IPs
+                      type: string
+                  type: object
+                type: array
               n4:
-                properties:
-                  endpoints:
-                    items:
-                      properties:
-                        gatewayIP:
-                          type: string
-                        ip:
-                          items:
-                            type: string
-                          type: array
-                      required:
-                      - ip
-                      type: object
-                    type: array
-                required:
-                - endpoints
-                type: object
+                items:
+                  properties:
+                    networkInstance:
+                      description: NetworkInstance identifies the layer 3 address
+                        space for IPAM
+                      type: string
+                    networkName:
+                      description: NetworkName identifies the specific network to
+                        use for IPs
+                      type: string
+                  type: object
+                type: array
               n6:
-                properties:
-                  endpoints:
-                    items:
+                items:
+                  properties:
+                    dnn:
+                      type: string
+                    endpoint:
                       properties:
-                        dnn:
+                        networkInstance:
+                          description: NetworkInstance identifies the layer 3 address
+                            space for IPAM
                           type: string
-                        ipEndpoint:
-                          properties:
-                            gatewayIP:
-                              type: string
-                            ip:
-                              items:
-                                type: string
-                              type: array
-                          required:
-                          - ip
-                          type: object
-                        ueIPPool:
-                          description: UE address pool
+                        networkName:
+                          description: NetworkName identifies the specific network
+                            to use for IPs
                           type: string
-                      required:
-                      - dnn
-                      - ipEndpoint
-                      - ueIPPool
                       type: object
-                    type: array
-                required:
-                - endpoints
-                type: object
+                    uePool:
+                      description: UE address pool
+                      properties:
+                        networkIntance:
+                          description: NetworkInstance identifies the layer 3 address
+                            space for IPAM
+                          type: string
+                        networkName:
+                          description: NetworkName identifies the specific network
+                            to use for IPs
+                          type: string
+                        prefixSize:
+                          description: PrefixSize identifies the size of the pool
+                            needed
+                          type: string
+                      type: object
+                  required:
+                  - dnn
+                  - endpoint
+                  - uePool
+                  type: object
+                type: array
               n9:
-                properties:
-                  endpoints:
-                    items:
-                      properties:
-                        gatewayIP:
-                          type: string
-                        ip:
-                          items:
-                            type: string
-                          type: array
-                      required:
-                      - ip
-                      type: object
-                    type: array
-                required:
-                - endpoints
-                type: object
+                items:
+                  properties:
+                    networkInstance:
+                      description: NetworkInstance identifies the layer 3 address
+                        space for IPAM
+                      type: string
+                    networkName:
+                      description: NetworkName identifies the specific network to
+                        use for IPs
+                      type: string
+                  type: object
+                type: array
               upfClassName:
                 type: string
-              uplinkThroughput:
-                type: string
             required:
-            - downlinkThroughput
+            - capacity
             - n3
             - n4
             - n6
             - upfClassName
-            - uplinkThroughput
             type: object
           status:
             description: UPFStatus defines the observed state of UPF

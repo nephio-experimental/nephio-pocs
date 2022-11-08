@@ -1,12 +1,27 @@
 apiVersion: nf.nephio.org/v1alpha1
 kind: FiveGCoreTopology
 metadata:
-  labels:
-    app.kubernetes.io/name: fivegcoretopology
-    app.kubernetes.io/instance: fivegcoretopology-sample
-    app.kubernetes.io/part-of: nephio-5gc-controller
-    app.kuberentes.io/managed-by: kustomize
-    app.kubernetes.io/created-by: nephio-5gc-controller
   name: fivegcoretopology-sample
 spec:
-  # TODO(user): Add fields here
+  upfs:
+    - selector:
+        matchLabels:
+          nephio.org/region: us-central1
+          nephio.org/site-type: edge
+      namespace: "upf-1"
+      upf:
+        upfClassName: "free5gc-311"
+        capacity:
+          uplinkThroughput: "1g"
+          downlinkThrougput: "10g"
+        n3:
+          - networkInstance: "sample-vpc"
+            networkName: "sample-n3-net"
+        n4:
+          - networkInstance: "sample-vpc"
+            networkName: "sample-n4-net"
+        n6:
+          - dnn: "internet"
+            uePoolSize: "/64"
+            networkInstance: "sample-vpc"
+            networkName: "sample-n6-net"

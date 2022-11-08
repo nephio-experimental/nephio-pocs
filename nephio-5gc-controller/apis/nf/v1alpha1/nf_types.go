@@ -17,6 +17,26 @@ limitations under the License.
 package v1alpha1
 
 type Endpoint struct {
-	IP        []string `json:"ip"`
-	GatewayIP *string  `json:"gatewayIP,omitempty"`
+
+	// NetworkInstance identifies the layer 3 address space for IPAM
+	// +optional
+	NetworkInstance *string `json:"networkInstance,omitempty"`
+
+	// NetworkName identifies the specific network to use for IPs
+	// +optional
+	NetworkName *string `json:"networkName,omitempty"`
+}
+
+type Pool struct {
+	// NetworkInstance identifies the layer 3 address space for IPAM
+	// +optional
+	NetworkInstance *string `json:"networkIntance,omitempty"`
+
+	// NetworkName identifies the specific network to use for IPs
+	// +optional
+	NetworkName *string `json:"networkName,omitempty"`
+
+	// PrefixSize identifies the size of the pool needed
+	// +optional
+	PrefixSize *string `json:"prefixSize,omitempty"`
 }
