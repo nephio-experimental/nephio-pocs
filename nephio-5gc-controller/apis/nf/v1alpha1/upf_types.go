@@ -29,7 +29,7 @@ type UPFN4 struct {
 }
 
 type N6Endpoint struct {
-	DNN         string   `json:"dnn"`
+	DNN        string   `json:"dnn"`
 	IPEndpoint Endpoint `json:"ipEndpoint"`
 	// UE address pool
 	UEIPPool string `json:"ueIPPool"`

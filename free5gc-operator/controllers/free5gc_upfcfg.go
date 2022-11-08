@@ -4,7 +4,7 @@
 
 package controllers
 
-var UpfCfg string = `
+var UPFCfg string = `
 info:
   version: 1.0.0
   description: UPF configuration

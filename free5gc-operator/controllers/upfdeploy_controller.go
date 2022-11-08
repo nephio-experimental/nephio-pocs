@@ -34,16 +34,16 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
 
-	upfdeployv1alpha1 "nephio.io/nfdeploy/api/v1alpha1"
+	upfdeployv1alpha1 "github.com/nephio-project/nephio-pocs/nephio-5gc-controller/apis/nf/v1alpha1"
 )
 
-// UpfDeployReconciler reconciles a UpfDeploy object
-type UpfDeployReconciler struct {
+// UPFDeploymentReconciler reconciles a UPFDeployment object
+type UPFDeploymentReconciler struct {
 	client.Client
 	Scheme *runtime.Scheme
 }
 
-func getResourceParams(capacity upfdeployv1alpha1.UpfCapacity) (int32, *apiv1.ResourceRequirements, error) {
+func getResourceParams(capacity upfdeployv1alpha1.UPFCapacity) (int32, *apiv1.ResourceRequirements, error) {
 	// TODO(user): operator should look at capacity profile to decide how much CPU it should
 	// request for this pod
 	// for now, hardcoded
@@ -78,7 +78,7 @@ func constructNadName(templateName string, suffix string) string {
 	return templateName + "-" + suffix
 }
 
-func getNad(templateName string, spec *upfdeployv1alpha1.UpfDeploySpec) (string, error) {
+func getNad(templateName string, spec *upfdeployv1alpha1.UPFDeploymentSpec) (string, error) {
 	var ret string
 	var n6IntfSlice = make([]upfdeployv1alpha1.InterfaceConfig, 0)
 	for _, n6intf := range spec.N6Interfaces {
@@ -98,7 +98,7 @@ func getNad(templateName string, spec *upfdeployv1alpha1.UpfDeploySpec) (string,
          "interface": "%s",
          "ips": ["%s"],
          "gateway": ["%s"]
-        }`, constructNadName(templateName, key), intf.Name, intf.IpAddr[0], intf.GwAddr[0])
+        }`, constructNadName(templateName, key), intf.Name, intf.IPs[0], intf.GatewayIPs[0])
 			if noComma {
 				ret = ret + newNad
 				noComma = false
@@ -113,7 +113,10 @@ func getNad(templateName string, spec *upfdeployv1alpha1.UpfDeploySpec) (string,
 	return ret, nil
 }
 
-func free5gcUpfDeploy(upfDeploy *upfdeployv1alpha1.UpfDeploy) (*appsv1.Deployment, error) {
+func free5gcUPFDeployment(upfDeploy *upfdeployv1alpha1.UPFDeployment) (*appsv1.Deployment, error) {
+	//TODO(jbelamaric): Update to use ImageConfig spec.ImagePaths["upf"],
+	upfImage := "towards5gs/free5gc-upf:v3.1.1"
+
 	instanceName := upfDeploy.ObjectMeta.Name
 	namespace := upfDeploy.ObjectMeta.Namespace
 	spec := upfDeploy.Spec
@@ -148,7 +151,7 @@ func free5gcUpfDeploy(upfDeploy *upfdeployv1alpha1.UpfDeploy) (*appsv1.Deploymen
 					Containers: []apiv1.Container{
 						{
 							Name:            "upf",
-							Image:           spec.ImagePaths["upf"],
+							Image:           upfImage,
 							ImagePullPolicy: "Always",
 							Ports: []apiv1.ContainerPort{
 								{
@@ -208,23 +211,23 @@ func free5gcUpfDeploy(upfDeploy *upfdeployv1alpha1.UpfDeploy) (*appsv1.Deploymen
 	return deployment, nil
 }
 
-func free5gcUpfCreateConfigmap(upfDeploy *upfdeployv1alpha1.UpfDeploy) (*apiv1.ConfigMap, error) {
+func free5gcUPFCreateConfigmap(upfDeploy *upfdeployv1alpha1.UPFDeployment) (*apiv1.ConfigMap, error) {
 	namespace := upfDeploy.ObjectMeta.Namespace
 	instanceName := upfDeploy.ObjectMeta.Name
 	// TODO(user): for now, assuming one DNN
-	n4IpAddr, _, _ := net.ParseCIDR(upfDeploy.Spec.N4Interfaces[0].IpAddr[0])
-	n3IpAddr, _, _ := net.ParseCIDR(upfDeploy.Spec.N3Interfaces[0].IpAddr[0])
+	n4IP, _, _ := net.ParseCIDR(upfDeploy.Spec.N4Interfaces[0].IPs[0])
+	n3IP, _, _ := net.ParseCIDR(upfDeploy.Spec.N3Interfaces[0].IPs[0])
 	n6Intf := upfDeploy.Spec.N6Interfaces[0]
-	upfcfg := strings.Clone(UpfCfg)
-	upfcfg = strings.Replace(upfcfg, "$DNN_CIDR", n6Intf.IpAddrPool, 1)
-	upfcfg = strings.Replace(upfcfg, "$DNN", n6Intf.Dnn, 1)
-	upfcfg = strings.Replace(upfcfg, "$PFCP_IP", n4IpAddr.String(), 1)
-	upfcfg = strings.Replace(upfcfg, "$GTPU_IP", n3IpAddr.String(), 1)
+	upfcfg := strings.Clone(UPFCfg)
+	upfcfg = strings.Replace(upfcfg, "$DNN_CIDR", n6Intf.UEIPPool, 1)
+	upfcfg = strings.Replace(upfcfg, "$DNN", n6Intf.DNN, 1)
+	upfcfg = strings.Replace(upfcfg, "$PFCP_IP", n4IP.String(), 1)
+	upfcfg = strings.Replace(upfcfg, "$GTPU_IP", n3IP.String(), 1)
 
-	wrapper := strings.Clone(UpfWrapperScript)
-	wrapper = strings.Replace(wrapper, "$DNN_NETWORK", n6Intf.IpAddrPool, 2)
+	wrapper := strings.Clone(UPFWrapperScript)
+	wrapper = strings.Replace(wrapper, "$DNN_NETWORK", n6Intf.UEIPPool, 2)
 	wrapper = strings.Replace(wrapper, "$N6_INTERFACE_NAME", n6Intf.Interface.Name, 2)
-	wrapper = strings.Replace(wrapper, "$N6_GATEWAY", n6Intf.Interface.GwAddr[0], 1)
+	wrapper = strings.Replace(wrapper, "$N6_GATEWAY", n6Intf.Interface.GatewayIPs[0], 1)
 
 	configMap := &apiv1.ConfigMap{
 		TypeMeta: metav1.TypeMeta{
@@ -254,23 +257,23 @@ func free5gcUpfCreateConfigmap(upfDeploy *upfdeployv1alpha1.UpfDeploy) (*apiv1.C
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
 // TODO(user): Modify the Reconcile function to compare the state specified by
-// the UpfDeploy object against the actual cluster state, and then
+// the UPFDeployment object against the actual cluster state, and then
 // perform operations to make the cluster state reflect the state specified by
 // the user.
 //
 // For more details, check Reconcile and its Result here:
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.12.1/pkg/reconcile
-func (r *UpfDeployReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
+func (r *UPFDeploymentReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	_ = log.FromContext(ctx)
 
-	upfDeploy := &upfdeployv1alpha1.UpfDeploy{}
+	upfDeploy := &upfdeployv1alpha1.UPFDeployment{}
 	err := r.Client.Get(ctx, req.NamespacedName, upfDeploy)
 	if err != nil {
 		if k8serrors.IsNotFound(err) {
 			// TODO(user): deleted after reconcile request --- need to handle
 			return reconcile.Result{}, nil
 		}
-		fmt.Printf("Error: failed to get UpfDeploy %s\n", err.Error())
+		fmt.Printf("Error: failed to get UPFDeployment %s\n", err.Error())
 		return reconcile.Result{}, err
 	}
 
@@ -305,7 +308,7 @@ func (r *UpfDeployReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 	}
 
 	// first set up the configmap
-	if cm, err := free5gcUpfCreateConfigmap(upfDeploy); err != nil {
+	if cm, err := free5gcUPFCreateConfigmap(upfDeploy); err != nil {
 		fmt.Printf("Error: failed to generate configmap %s\n", err.Error())
 		return reconcile.Result{}, err
 	} else {
@@ -322,7 +325,7 @@ func (r *UpfDeployReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 		}
 	}
 
-	if deployment, err := free5gcUpfDeploy(upfDeploy); err != nil {
+	if deployment, err := free5gcUPFDeployment(upfDeploy); err != nil {
 		fmt.Printf("Error: failed to generate deployment %s\n", err.Error())
 		return reconcile.Result{}, err
 	} else {
@@ -335,8 +338,8 @@ func (r *UpfDeployReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 }
 
 // SetupWithManager sets up the controller with the Manager.
-func (r *UpfDeployReconciler) SetupWithManager(mgr ctrl.Manager) error {
+func (r *UPFDeploymentReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
-		For(&upfdeployv1alpha1.UpfDeploy{}).
+		For(&upfdeployv1alpha1.UPFDeployment{}).
 		Complete(r)
 }

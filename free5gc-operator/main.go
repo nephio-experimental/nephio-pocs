@@ -31,8 +31,9 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/healthz"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
-	nfdeployv1alpha1 "nephio.io/nfdeploy/api/v1alpha1"
-	"nephio.io/nfdeploy/controllers"
+	free5gcv1alpha1 "github.com/nephio-project/nephio-pocs/free5gc-operator/api/v1alpha1"
+	"github.com/nephio-project/nephio-pocs/free5gc-operator/controllers"
+	nfdeployv1alpha1 "github.com/nephio-project/nephio-pocs/nephio-5gc-controller/apis/nf/v1alpha1"
 	//+kubebuilder:scaffold:imports
 )
 
@@ -45,6 +46,7 @@ func init() {
 	utilruntime.Must(clientgoscheme.AddToScheme(scheme))
 
 	utilruntime.Must(nfdeployv1alpha1.AddToScheme(scheme))
+	utilruntime.Must(free5gcv1alpha1.AddToScheme(scheme))
 	//+kubebuilder:scaffold:scheme
 }
 
@@ -71,7 +73,7 @@ func main() {
 		Port:                   9443,
 		HealthProbeBindAddress: probeAddr,
 		LeaderElection:         enableLeaderElection,
-		LeaderElectionID:       "c89e70b4.nephio.io",
+		LeaderElectionID:       "c89e70b4.nephio.org",
 		// LeaderElectionReleaseOnCancel defines if the leader should step down voluntarily
 		// when the Manager ends. This requires the binary to immediately end when the
 		// Manager is stopped, otherwise, this setting is unsafe. Setting this significantly
@@ -89,11 +91,18 @@ func main() {
 		os.Exit(1)
 	}
 
-	if err = (&controllers.UpfDeployReconciler{
+	if err = (&controllers.UPFDeploymentReconciler{
 		Client: mgr.GetClient(),
 		Scheme: mgr.GetScheme(),
 	}).SetupWithManager(mgr); err != nil {
-		setupLog.Error(err, "unable to create controller", "controller", "UpfDeploy")
+		setupLog.Error(err, "unable to create controller", "controller", "UPFDeployment")
+		os.Exit(1)
+	}
+	if err = (&controllers.ImageConfigReconciler{
+		Client: mgr.GetClient(),
+		Scheme: mgr.GetScheme(),
+	}).SetupWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "ImageConfig")
 		os.Exit(1)
 	}
 	//+kubebuilder:scaffold:builder
