@@ -9,8 +9,8 @@ metadata:
 spec:
   group: nf.nephio.org
   names:
-    kind: Upf
-    listKind: UpfList
+    kind: UPF
+    listKind: UPFList
     plural: upfs
     singular: upf
   scope: Namespaced
@@ -18,7 +18,7 @@ spec:
   - name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: Upf is the Schema for the upfs API
+        description: UPF is the Schema for the upfs API
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation
@@ -33,7 +33,7 @@ spec:
           metadata:
             type: object
           spec:
-            description: UpfSpec defines the desired state of Upf
+            description: UPFSpec defines the desired state of UPF
             properties:
               downlinkThroughput:
                 type: string
@@ -42,14 +42,14 @@ spec:
                   endpoints:
                     items:
                       properties:
-                        gwv4addr:
+                        gatewayIP:
                           type: string
-                        ipv4Addr:
+                        ip:
                           items:
                             type: string
                           type: array
                       required:
-                      - ipv4Addr
+                      - ip
                       type: object
                     type: array
                 required:
@@ -60,14 +60,14 @@ spec:
                   endpoints:
                     items:
                       properties:
-                        gwv4addr:
+                        gatewayIP:
                           type: string
-                        ipv4Addr:
+                        ip:
                           items:
                             type: string
                           type: array
                       required:
-                      - ipv4Addr
+                      - ip
                       type: object
                     type: array
                 required:
@@ -80,24 +80,24 @@ spec:
                       properties:
                         dnn:
                           type: string
-                        ipaddrpool:
-                          description: UE address pool
-                          type: string
-                        ipendpoints:
+                        ipEndpoint:
                           properties:
-                            gwv4addr:
+                            gatewayIP:
                               type: string
-                            ipv4Addr:
+                            ip:
                               items:
                                 type: string
                               type: array
                           required:
-                          - ipv4Addr
+                          - ip
                           type: object
+                        ueIPPool:
+                          description: UE address pool
+                          type: string
                       required:
                       - dnn
-                      - ipaddrpool
-                      - ipendpoints
+                      - ipEndpoint
+                      - ueIPPool
                       type: object
                     type: array
                 required:
@@ -108,14 +108,14 @@ spec:
                   endpoints:
                     items:
                       properties:
-                        gwv4addr:
+                        gatewayIP:
                           type: string
-                        ipv4Addr:
+                        ip:
                           items:
                             type: string
                           type: array
                       required:
-                      - ipv4Addr
+                      - ip
                       type: object
                     type: array
                 required:
@@ -134,7 +134,7 @@ spec:
             - uplinkThroughput
             type: object
           status:
-            description: UpfStatus defines the observed state of Upf
+            description: UPFStatus defines the observed state of UPF
             type: object
         type: object
     served: true

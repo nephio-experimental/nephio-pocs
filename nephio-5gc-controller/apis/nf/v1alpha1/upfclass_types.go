@@ -21,24 +21,24 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// UpfClassSpec defines the desired state of UpfClass
-type UpfClassSpec struct {
+// UPFClassSpec defines the desired state of UPFClass
+type UPFClassSpec struct {
 	PackageRef automationv1alpha1.PackageRevisionReference `json:"packageRef"`
 
-	N3Endpoints int `json:"n3endpoints"`
-	N4Endpoints int `json:"n4endpoints"`
-	N6Endpoints int `json:"n6endpoints"`
-	N9Endpoints int `json:"n9endpoints"`
+	N3EndpointCount int `json:"n3endpoints"`
+	N4EndpointCount int `json:"n4endpoints"`
+	N6EndpointCount int `json:"n6endpoints"`
+	N9EndpointCount int `json:"n9endpoints"`
 
 	// +optional
-	Dnn []string `json:"dnn"`
+	DNNs []string `json:"dnns"`
 }
 
-// UpfClassStatus defines the observed state of UpfClass
+// UPFClassStatus defines the observed state of UPFClass
 // TODO: we need a controller to validate that the packageRef is
 // valid and that the underlying package is Ready
-type UpfClassStatus struct {
-	// Specifies whether the UpfClass is ready to be used
+type UPFClassStatus struct {
+	// Specifies whether the UPFClass is ready to be used
 	Ready bool `json:"ready"`
 }
 
@@ -46,24 +46,24 @@ type UpfClassStatus struct {
 //+kubebuilder:subresource:status
 //+kubebuilder:resource:path=upfclasses,scope=Cluster
 
-// UpfClass is the Schema for the upfclasses API
-type UpfClass struct {
+// UPFClass is the Schema for the upfclasses API
+type UPFClass struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec   UpfClassSpec   `json:"spec,omitempty"`
-	Status UpfClassStatus `json:"status,omitempty"`
+	Spec   UPFClassSpec   `json:"spec,omitempty"`
+	Status UPFClassStatus `json:"status,omitempty"`
 }
 
 //+kubebuilder:object:root=true
 
-// UpfClassList contains a list of UpfClass
-type UpfClassList struct {
+// UPFClassList contains a list of UPFClass
+type UPFClassList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
-	Items           []UpfClass `json:"items"`
+	Items           []UPFClass `json:"items"`
 }
 
 func init() {
-	SchemeBuilder.Register(&UpfClass{}, &UpfClassList{})
+	SchemeBuilder.Register(&UPFClass{}, &UPFClassList{})
 }

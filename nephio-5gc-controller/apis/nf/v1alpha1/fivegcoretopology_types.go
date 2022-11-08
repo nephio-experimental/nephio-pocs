@@ -20,19 +20,16 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
-// NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
-
 // FiveGCoreTopologySpec defines the desired state of FiveGCoreTopology
 type FiveGCoreTopologySpec struct {
-	// Upfs lists different UPF configurations needed in this topology
-	Upfs []UpfSpec `json:"upfs,omitempty"`
+	// UPFs lists different UPF configurations needed in this topology
+	UPFs []UPFSpec `json:"upfs,omitempty"`
 }
 
 // FiveGCoreTopologyStatus defines the observed state of FiveGCoreTopology
 type FiveGCoreTopologyStatus struct {
-	// UpfStatuses lists the deployment status of each UPF configuration
-	UpfStatuses []UpfStatus `json:"upfStatuses,omitempty"`
+	// UPFStatuses lists the deployment status of each UPF configuration
+	UPFStatuses []UPFStatus `json:"upfStatuses,omitempty"`
 }
 
 //+kubebuilder:object:root=true
