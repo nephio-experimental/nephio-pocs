@@ -95,7 +95,7 @@ spec:
                 items:
                   properties:
                     dnn:
-                      description: Dnn is the Data Network Name
+                      description: DNN is the Data Network Name
                       type: string
                     interface:
                       properties:
@@ -141,6 +141,11 @@ spec:
                   - name
                   type: object
                 type: array
+            required:
+            - capacity
+            - n3Interfaces
+            - n4Interfaces
+            - n6Interfaces
             type: object
           status:
             properties:

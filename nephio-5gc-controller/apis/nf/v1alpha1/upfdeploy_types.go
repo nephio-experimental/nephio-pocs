@@ -33,18 +33,18 @@ type UPFCapacity struct {
 }
 
 type N6InterfaceConfig struct {
-	// Dnn is the Data Network Name
-	DNN       string          `json:"dnn"`
 	Interface InterfaceConfig `json:"interface"`
-	UEIPPool  string          `json:"ueIPPool"`
+	// DNN is the Data Network Name
+	DNN      string `json:"dnn"`
+	UEIPPool string `json:"ueIPPool"`
 }
 
 // UPFDeploymentSpec specifies config parameters for UPF
 type UPFDeploymentSpec struct {
-	Capacity     UPFCapacity         `json:"capacity,omitempty"`
-	N3Interfaces []InterfaceConfig   `json:"n3Interfaces,omitempty"`
-	N4Interfaces []InterfaceConfig   `json:"n4Interfaces,omitempty"`
-	N6Interfaces []N6InterfaceConfig `json:"n6Interfaces,omitempty"`
+	Capacity     UPFCapacity         `json:"capacity"`
+	N3Interfaces []InterfaceConfig   `json:"n3Interfaces"`
+	N4Interfaces []InterfaceConfig   `json:"n4Interfaces"`
+	N6Interfaces []N6InterfaceConfig `json:"n6Interfaces"`
 	// +optional
 	N9Interfaces []InterfaceConfig `json:"n9Interfaces,omitempty"`
 }

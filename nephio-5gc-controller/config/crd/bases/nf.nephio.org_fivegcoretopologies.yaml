@@ -39,105 +39,168 @@ spec:
                 description: UPFs lists different UPF configurations needed in this
                   topology
                 items:
-                  description: UPFSpec defines the desired state of UPF
                   properties:
-                    downlinkThroughput:
+                    namespace:
                       type: string
-                    n3:
+                    selector:
+                      description: A label selector is a label query over a set of
+                        resources. The result of matchLabels and matchExpressions
+                        are ANDed. An empty label selector matches all objects. A
+                        null label selector matches no objects.
                       properties:
-                        endpoints:
+                        matchExpressions:
+                          description: matchExpressions is a list of label selector
+                            requirements. The requirements are ANDed.
                           items:
+                            description: A label selector requirement is a selector
+                              that contains values, a key, and an operator that relates
+                              the key and values.
                             properties:
-                              gatewayIP:
+                              key:
+                                description: key is the label key that the selector
+                                  applies to.
                                 type: string
-                              ip:
+                              operator:
+                                description: operator represents a key's relationship
+                                  to a set of values. Valid operators are In, NotIn,
+                                  Exists and DoesNotExist.
+                                type: string
+                              values:
+                                description: values is an array of string values.
+                                  If the operator is In or NotIn, the values array
+                                  must be non-empty. If the operator is Exists or
+                                  DoesNotExist, the values array must be empty. This
+                                  array is replaced during a strategic merge patch.
                                 items:
                                   type: string
                                 type: array
                             required:
-                            - ip
+                            - key
+                            - operator
                             type: object
                           type: array
-                      required:
-                      - endpoints
+                        matchLabels:
+                          additionalProperties:
+                            type: string
+                          description: matchLabels is a map of {key,value} pairs.
+                            A single {key,value} in the matchLabels map is equivalent
+                            to an element of matchExpressions, whose key field is
+                            "key", the operator is "In", and the values array contains
+                            only "value". The requirements are ANDed.
+                          type: object
                       type: object
-                    n4:
+                      x-kubernetes-map-type: atomic
+                    upf:
+                      description: UPFSpec defines the desired state of UPF
                       properties:
-                        endpoints:
+                        capacity:
+                          properties:
+                            downlinkThroughput:
+                              anyOf:
+                              - type: integer
+                              - type: string
+                              pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                              x-kubernetes-int-or-string: true
+                            uplinkThroughput:
+                              anyOf:
+                              - type: integer
+                              - type: string
+                              pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                              x-kubernetes-int-or-string: true
+                          required:
+                          - downlinkThroughput
+                          - uplinkThroughput
+                          type: object
+                        n3:
                           items:
                             properties:
-                              gatewayIP:
+                              networkInstance:
+                                description: NetworkInstance identifies the layer
+                                  3 address space for IPAM
                                 type: string
-                              ip:
-                                items:
-                                  type: string
-                                type: array
-                            required:
-                            - ip
+                              networkName:
+                                description: NetworkName identifies the specific network
+                                  to use for IPs
+                                type: string
                             type: object
                           type: array
-                      required:
-                      - endpoints
-                      type: object
-                    n6:
-                      properties:
-                        endpoints:
+                        n4:
+                          items:
+                            properties:
+                              networkInstance:
+                                description: NetworkInstance identifies the layer
+                                  3 address space for IPAM
+                                type: string
+                              networkName:
+                                description: NetworkName identifies the specific network
+                                  to use for IPs
+                                type: string
+                            type: object
+                          type: array
+                        n6:
                           items:
                             properties:
                               dnn:
                                 type: string
-                              ipEndpoint:
+                              endpoint:
                                 properties:
-                                  gatewayIP:
+                                  networkInstance:
+                                    description: NetworkInstance identifies the layer
+                                      3 address space for IPAM
                                     type: string
-                                  ip:
-                                    items:
-                                      type: string
-                                    type: array
-                                required:
-                                - ip
+                                  networkName:
+                                    description: NetworkName identifies the specific
+                                      network to use for IPs
+                                    type: string
                                 type: object
-                              ueIPPool:
+                              uePool:
                                 description: UE address pool
-                                type: string
+                                properties:
+                                  networkIntance:
+                                    description: NetworkInstance identifies the layer
+                                      3 address space for IPAM
+                                    type: string
+                                  networkName:
+                                    description: NetworkName identifies the specific
+                                      network to use for IPs
+                                    type: string
+                                  prefixSize:
+                                    description: PrefixSize identifies the size of
+                                      the pool needed
+                                    type: string
+                                type: object
                             required:
                             - dnn
-                            - ipEndpoint
-                            - ueIPPool
+                            - endpoint
+                            - uePool
                             type: object
                           type: array
-                      required:
-                      - endpoints
-                      type: object
-                    n9:
-                      properties:
-                        endpoints:
+                        n9:
                           items:
                             properties:
-                              gatewayIP:
+                              networkInstance:
+                                description: NetworkInstance identifies the layer
+                                  3 address space for IPAM
                                 type: string
-                              ip:
-                                items:
-                                  type: string
-                                type: array
-                            required:
-                            - ip
+                              networkName:
+                                description: NetworkName identifies the specific network
+                                  to use for IPs
+                                type: string
                             type: object
                           type: array
+                        upfClassName:
+                          type: string
                       required:
-                      - endpoints
+                      - capacity
+                      - n3
+                      - n4
+                      - n6
+                      - upfClassName
                       type: object
-                    upfClassName:
-                      type: string
-                    uplinkThroughput:
-                      type: string
                   required:
-                  - downlinkThroughput
-                  - n3
-                  - n4
-                  - n6
-                  - upfClassName
-                  - uplinkThroughput
+                  - namespace
+                  - selector
+                  - upf
                   type: object
                 type: array
             type: object

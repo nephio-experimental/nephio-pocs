@@ -20,10 +20,16 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
+type UPFClusterSet struct {
+	Selector  metav1.LabelSelector `json:"selector"`
+	Namespace string               `json:"namespace"`
+	UPF       UPFSpec              `json:"upf"`
+}
+
 // FiveGCoreTopologySpec defines the desired state of FiveGCoreTopology
 type FiveGCoreTopologySpec struct {
 	// UPFs lists different UPF configurations needed in this topology
-	UPFs []UPFSpec `json:"upfs,omitempty"`
+	UPFs []UPFClusterSet `json:"upfs,omitempty"`
 }
 
 // FiveGCoreTopologyStatus defines the observed state of FiveGCoreTopology
