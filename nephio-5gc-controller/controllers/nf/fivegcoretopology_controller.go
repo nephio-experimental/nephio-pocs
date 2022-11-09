@@ -18,6 +18,7 @@ package nf
 
 import (
 	"context"
+	"fmt"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -30,6 +31,18 @@ import (
 	autov1alpha1 "github.com/nephio-project/nephio-controller-poc/apis/automation/v1alpha1"
 	nfv1alpha1 "github.com/nephio-project/nephio-pocs/nephio-5gc-controller/apis/nf/v1alpha1"
 )
+
+const (
+	pdOwnerKey             = ".metadata.controller"
+	nfTypeAnnotation       = "nf.nephio.org/type"
+	nfTypeUPF              = "UPF"
+	nfTypeAMF              = "SMF"
+	nfTypeSMF              = "SMF"
+	nfClusterSetAnnotation = "nf.nephio.org/cluster-set"
+	nfTopologyAnnotation   = "nf.nephio.org/topology"
+)
+
+var nfTypes = [...]string{nfTypeUPF, nfTypeAMF, nfTypeSMF}
 
 // FiveGCoreTopologyReconciler reconciles a FiveGCoreTopology object
 type FiveGCoreTopologyReconciler struct {
@@ -63,6 +76,12 @@ func (r *FiveGCoreTopologyReconciler) Reconcile(ctx context.Context, req ctrl.Re
 
 	r.l.Info("loaded", "topo", topo)
 
+	pdMap, err := r.getPackageDeployments(ctx, req)
+	if err != nil {
+		r.l.Error(err, "could not load package deployments")
+		return ctrl.Result{}, err
+	}
+
 	for _, u := range topo.Spec.UPFs {
 		// for each UPFClusterSet, create a PackageDeployment
 		// the reference package should have a UPFDeployment injection
@@ -70,40 +89,129 @@ func (r *FiveGCoreTopologyReconciler) Reconcile(ctx context.Context, req ctrl.Re
 		// TODO: add a validation that UPFClusterSet name is unique within a FiveGCoreTopology resource
 		//
 
-		// find the UPF class
-		upfClassName := u.UPF.UPFClassName
-		upfClass, err := r.getUPFClass(ctx, upfClassName)
-		if err != nil {
-			r.l.Error(err, "unable to fetch UPFClass %q", upfClassName)
+		var upfClass nfv1alpha1.UPFClass
+		if err := r.Get(ctx, client.ObjectKey{Name: u.UPF.UPFClassName}, &upfClass); err != nil {
+			r.l.Error(err, "unable to fetch UPFClass", "upfClassName", u.UPF.UPFClassName)
 			return ctrl.Result{}, err
 		}
 
-		// create the PackageDeployment
-		pd := autov1alpha1.PackageDeployment{
-			ObjectMeta: metav1.ObjectMeta{
-				Name:      topo.Name + "-" + u.Name, //TODO: Fix this garbage
-				Namespace: topo.Namespace,
-			},
-			Spec: autov1alpha1.PackageDeploymentSpec{
-				Selector:   &u.Selector,
-				PackageRef: upfClass.Spec.PackageRef,
-				Namespace:  &u.Namespace,
-			},
+		var pd *autov1alpha1.PackageDeployment
+
+		cacheEntry, exists := pdMap[nfTypeUPF][u.Name]
+		if exists {
+			pd = cacheEntry.pd
+			cacheEntry.keep = true
+		} else {
+			// create the PackageDeployment
+			pd = &autov1alpha1.PackageDeployment{
+				ObjectMeta: metav1.ObjectMeta{
+					Name:      topo.Name + "-" + u.Name, //TODO: Fix this garbage
+					Namespace: topo.Namespace,
+					Annotations: map[string]string{
+						nfTypeAnnotation:       nfTypeUPF,
+						nfClusterSetAnnotation: u.Name,
+						nfTopologyAnnotation:   req.Name,
+					},
+				},
+			}
 		}
 
-		r.l.Info("creating", "pd", pd)
+		// update the PD
+		pd.Spec.Selector = &u.Selector
+		pd.Spec.PackageRef = upfClass.Spec.PackageRef
+		pd.Spec.Namespace = &u.Namespace
+
+		if exists {
+			r.l.Info("updating", "pd", pd)
+			err = r.Update(ctx, pd)
+			if err != nil {
+				return ctrl.Result{}, err
+			}
+		} else {
+			r.l.Info("creating", "pd", pd)
+			err = r.Create(ctx, pd)
+			if err != nil {
+				return ctrl.Result{}, err
+			}
+		}
+
+		r.cleanUpPackageDeployments(ctx, pdMap, nfTypeUPF)
+
 	}
 
 	return ctrl.Result{}, nil
 }
 
-func (r *FiveGCoreTopologyReconciler) getUPFClass(ctx context.Context, upfClassName string) (*nfv1alpha1.UPFClass, error) {
-	return &nfv1alpha1.UPFClass{}, nil
+type pdCacheEntry struct {
+	pd   *autov1alpha1.PackageDeployment
+	keep bool
+}
+
+type pdCache map[string]map[string]pdCacheEntry
+
+func (r *FiveGCoreTopologyReconciler) getPackageDeployments(ctx context.Context, req ctrl.Request) (pdCache, error) {
+	// fetch existing PackageDeployments owned by this controller
+	var pdList autov1alpha1.PackageDeploymentList
+	if err := r.List(ctx, &pdList, client.InNamespace(req.Namespace), client.MatchingFields{pdOwnerKey: req.Name}); err != nil {
+		return nil, err
+	}
+
+	m := make(pdCache)
+
+	for _, t := range nfTypes {
+		m[t] = make(map[string]pdCacheEntry)
+	}
+
+	for _, pd := range pdList.Items {
+		nfType := pd.Annotations[nfTypeAnnotation]
+		nfCS := pd.Annotations[nfClusterSetAnnotation]
+
+		csMap, ok := m[nfType]
+		if !ok {
+			return nil, fmt.Errorf("invalid type annotation %q", nfType)
+		}
+
+		csMap[nfCS] = pdCacheEntry{
+			pd:   &pd,
+			keep: false,
+		}
+	}
+
+	return m, nil
+}
+
+func (r *FiveGCoreTopologyReconciler) cleanUpPackageDeployments(ctx context.Context, pdMap pdCache, nfType string) {
+	for _, ce := range pdMap[nfTypeUPF] {
+		if !ce.keep {
+			if err := r.Delete(ctx, ce.pd); err != nil {
+				r.l.Error(err, "could not delete PackageDeployment", "packageDeployment", ce.pd)
+			}
+		}
+	}
+
+	return
 }
 
 // SetupWithManager sets up the controller with the Manager.
 func (r *FiveGCoreTopologyReconciler) SetupWithManager(mgr ctrl.Manager) error {
+	if err := mgr.GetFieldIndexer().IndexField(context.Background(), &autov1alpha1.PackageDeployment{}, pdOwnerKey, func(rawObj client.Object) []string {
+		pd := rawObj.(*autov1alpha1.PackageDeployment)
+		owner := metav1.GetControllerOf(pd)
+		if owner == nil {
+			return nil
+		}
+
+		if owner.APIVersion != "automation.nephio.org/v1alpha1" || owner.Kind != "PackageDeployment" {
+			return nil
+		}
+
+		return []string{owner.Name}
+	}); err != nil {
+		return err
+	}
+
 	return ctrl.NewControllerManagedBy(mgr).
 		For(&nfv1alpha1.FiveGCoreTopology{}).
+		Owns(&autov1alpha1.PackageDeployment{}).
 		Complete(r)
 }
