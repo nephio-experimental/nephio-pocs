@@ -30,7 +30,7 @@ type Endpoint struct {
 type Pool struct {
 	// NetworkInstance identifies the layer 3 address space for IPAM
 	// +optional
-	NetworkInstance *string `json:"networkIntance,omitempty"`
+	NetworkInstance *string `json:"networkInstance,omitempty"`
 
 	// NetworkName identifies the specific network to use for IPs
 	// +optional

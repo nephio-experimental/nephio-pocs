@@ -98,7 +98,7 @@ spec:
                     uePool:
                       description: UE address pool
                       properties:
-                        networkIntance:
+                        networkInstance:
                           description: NetworkInstance identifies the layer 3 address
                             space for IPAM
                           type: string
