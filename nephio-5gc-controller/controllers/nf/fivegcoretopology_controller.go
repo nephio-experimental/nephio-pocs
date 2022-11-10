@@ -36,7 +36,7 @@ const (
 	pdOwnerKey             = ".metadata.controller"
 	nfTypeAnnotation       = "nf.nephio.org/type"
 	nfTypeUPF              = "UPF"
-	nfTypeAMF              = "SMF"
+	nfTypeAMF              = "AMF"
 	nfTypeSMF              = "SMF"
 	nfClusterSetAnnotation = "nf.nephio.org/cluster-set"
 	nfTopologyAnnotation   = "nf.nephio.org/topology"
@@ -81,6 +81,8 @@ func (r *FiveGCoreTopologyReconciler) Reconcile(ctx context.Context, req ctrl.Re
 		r.l.Error(err, "could not load package deployments")
 		return ctrl.Result{}, err
 	}
+
+	r.l.Info("loaded pdMap", "pdMap", pdMap)
 
 	for _, u := range topo.Spec.UPFs {
 		// for each UPFClusterSet, create a PackageDeployment
@@ -128,6 +130,10 @@ func (r *FiveGCoreTopologyReconciler) Reconcile(ctx context.Context, req ctrl.Re
 				return ctrl.Result{}, err
 			}
 		} else {
+			if err := ctrl.SetControllerReference(&topo, pd, r.Scheme); err != nil {
+				return ctrl.Result{}, err
+			}
+
 			r.l.Info("creating", "pd", pd)
 			err = r.Create(ctx, pd)
 			if err != nil {
@@ -147,7 +153,7 @@ type pdCacheEntry struct {
 	keep bool
 }
 
-type pdCache map[string]map[string]pdCacheEntry
+type pdCache map[string]map[string]*pdCacheEntry
 
 func (r *FiveGCoreTopologyReconciler) getPackageDeployments(ctx context.Context, req ctrl.Request) (pdCache, error) {
 	// fetch existing PackageDeployments owned by this controller
@@ -157,9 +163,8 @@ func (r *FiveGCoreTopologyReconciler) getPackageDeployments(ctx context.Context,
 	}
 
 	m := make(pdCache)
-
 	for _, t := range nfTypes {
-		m[t] = make(map[string]pdCacheEntry)
+		m[t] = make(map[string]*pdCacheEntry)
 	}
 
 	for _, pd := range pdList.Items {
@@ -171,7 +176,7 @@ func (r *FiveGCoreTopologyReconciler) getPackageDeployments(ctx context.Context,
 			return nil, fmt.Errorf("invalid type annotation %q", nfType)
 		}
 
-		csMap[nfCS] = pdCacheEntry{
+		csMap[nfCS] = &pdCacheEntry{
 			pd:   &pd,
 			keep: false,
 		}
@@ -183,6 +188,7 @@ func (r *FiveGCoreTopologyReconciler) getPackageDeployments(ctx context.Context,
 func (r *FiveGCoreTopologyReconciler) cleanUpPackageDeployments(ctx context.Context, pdMap pdCache, nfType string) {
 	for _, ce := range pdMap[nfTypeUPF] {
 		if !ce.keep {
+			r.l.Info("deleting stale packagedeployment", "pd", ce.pd)
 			if err := r.Delete(ctx, ce.pd); err != nil {
 				r.l.Error(err, "could not delete PackageDeployment", "packageDeployment", ce.pd)
 			}
@@ -201,7 +207,7 @@ func (r *FiveGCoreTopologyReconciler) SetupWithManager(mgr ctrl.Manager) error {
 			return nil
 		}
 
-		if owner.APIVersion != "automation.nephio.org/v1alpha1" || owner.Kind != "PackageDeployment" {
+		if owner.APIVersion != nfv1alpha1.GroupVersion.String() || owner.Kind != "FiveGCoreTopology" {
 			return nil
 		}
 
