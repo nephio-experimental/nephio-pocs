@@ -31,6 +31,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/healthz"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
+	autov1alpha1 "github.com/nephio-project/nephio-controller-poc/apis/automation/v1alpha1"
 	nfv1alpha1 "github.com/nephio-project/nephio-pocs/nephio-5gc-controller/apis/nf/v1alpha1"
 	nfcontrollers "github.com/nephio-project/nephio-pocs/nephio-5gc-controller/controllers/nf"
 	//+kubebuilder:scaffold:imports
@@ -45,6 +46,7 @@ func init() {
 	utilruntime.Must(clientgoscheme.AddToScheme(scheme))
 
 	utilruntime.Must(nfv1alpha1.AddToScheme(scheme))
+	utilruntime.Must(autov1alpha1.AddToScheme(scheme))
 	//+kubebuilder:scaffold:scheme
 }
 

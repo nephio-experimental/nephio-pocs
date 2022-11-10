@@ -39,13 +39,13 @@ spec:
                 items:
                   type: string
                 type: array
-              n3endpoints:
+              n3EndpointCount:
                 type: integer
-              n4endpoints:
+              n4EndpointCount:
                 type: integer
-              n6endpoints:
+              n6EndpointCount:
                 type: integer
-              n9endpoints:
+              n9EndpointCount:
                 type: integer
               packageRef:
                 description: PackageRevisionReference is used to reference a particular
@@ -72,10 +72,10 @@ spec:
                 - revision
                 type: object
             required:
-            - n3endpoints
-            - n4endpoints
-            - n6endpoints
-            - n9endpoints
+            - n3EndpointCount
+            - n4EndpointCount
+            - n6EndpointCount
+            - n9EndpointCount
             - packageRef
             type: object
           status:

@@ -4,16 +4,17 @@ metadata:
   name: fivegcoretopology-sample
 spec:
   upfs:
-    - selector:
+    - name: "agg-layer"
+      selector:
         matchLabels:
           nephio.org/region: us-central1
           nephio.org/site-type: edge
-      namespace: "upf-1"
+      namespace: "upf"
       upf:
-        upfClassName: "free5gc-311"
+        upfClassName: "free5gc-upf"
         capacity:
-          uplinkThroughput: "1g"
-          downlinkThrougput: "10g"
+          uplinkThroughput: "1G"
+          downlinkThroughput: "10G"
         n3:
           - networkInstance: "sample-vpc"
             networkName: "sample-n3-net"
@@ -22,6 +23,10 @@ spec:
             networkName: "sample-n4-net"
         n6:
           - dnn: "internet"
-            uePoolSize: "/64"
-            networkInstance: "sample-vpc"
-            networkName: "sample-n6-net"
+            uePool:
+              networkInstance: "sample-vpc"
+              networkName: "ue-net"
+              prefixSize: "/64"
+            endpoint:
+              networkInstance: "sample-vpc"
+              networkName: "sample-n6-net"

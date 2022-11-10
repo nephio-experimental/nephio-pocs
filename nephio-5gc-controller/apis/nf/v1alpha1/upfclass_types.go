@@ -25,10 +25,10 @@ import (
 type UPFClassSpec struct {
 	PackageRef automationv1alpha1.PackageRevisionReference `json:"packageRef"`
 
-	N3EndpointCount int `json:"n3endpoints"`
-	N4EndpointCount int `json:"n4endpoints"`
-	N6EndpointCount int `json:"n6endpoints"`
-	N9EndpointCount int `json:"n9endpoints"`
+	N3EndpointCount int `json:"n3EndpointCount"`
+	N4EndpointCount int `json:"n4EndpointCount"`
+	N6EndpointCount int `json:"n6EndpointCount"`
+	N9EndpointCount int `json:"n9EndpointCount"`
 
 	// +optional
 	DNNs []string `json:"dnns"`

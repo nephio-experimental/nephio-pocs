@@ -21,6 +21,7 @@ import (
 )
 
 type UPFClusterSet struct {
+	Name      string               `json:"name"`
 	Selector  metav1.LabelSelector `json:"selector"`
 	Namespace string               `json:"namespace"`
 	UPF       UPFSpec              `json:"upf"`
