@@ -20,6 +20,7 @@ import (
 	"context"
 	"fmt"
 
+	"k8s.io/apimachinery/pkg/api/equality"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
@@ -101,7 +102,7 @@ func (r *FiveGCoreTopologyReconciler) Reconcile(ctx context.Context, req ctrl.Re
 
 		cacheEntry, exists := pdMap[nfTypeUPF][u.Name]
 		if exists {
-			pd = cacheEntry.pd
+			pd = cacheEntry.pd.DeepCopy()
 			cacheEntry.keep = true
 		} else {
 			// create the PackageDeployment
@@ -122,12 +123,25 @@ func (r *FiveGCoreTopologyReconciler) Reconcile(ctx context.Context, req ctrl.Re
 		pd.Spec.Selector = &u.Selector
 		pd.Spec.PackageRef = upfClass.Spec.PackageRef
 		pd.Spec.Namespace = &u.Namespace
+		pdName := u.Name + "-" + "upf"
+		pd.Spec.Name = &pdName
+
+		if pd.Spec.Annotations == nil {
+			pd.Spec.Annotations = make(map[string]string)
+		}
+		pd.Spec.Annotations[nfTypeAnnotation] = nfTypeUPF
+		pd.Spec.Annotations[nfClusterSetAnnotation] = u.Name
+		pd.Spec.Annotations[nfTopologyAnnotation] = req.Name
 
 		if exists {
-			r.l.Info("updating", "pd", pd)
-			err = r.Update(ctx, pd)
-			if err != nil {
-				return ctrl.Result{}, err
+			if equality.Semantic.DeepEqual(cacheEntry.pd, pd) {
+				r.l.Info("no change, not updating", "pd", pd)
+			} else {
+				r.l.Info("updating", "pd", pd)
+				err = r.Update(ctx, pd)
+				if err != nil {
+					return ctrl.Result{}, err
+				}
 			}
 		} else {
 			if err := ctrl.SetControllerReference(&topo, pd, r.Scheme); err != nil {
