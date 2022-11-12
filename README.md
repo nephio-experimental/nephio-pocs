@@ -32,8 +32,33 @@ to Nephio's goals:
   or node-specific knowledge. Knap then generates Multus CNI configs automatically.
 * [Nephio NF Controllers](nephio-nf-controllers/)
   An example of network function controllers integrated with [kpt](https://kpt.dev/).
+* [Nephio Package Deployment Controller](nephio-controller-poc/)
+  Shows how to use Porch to render package variants across a set of cluster
+  repositories, while injecting cluster specific context and reconfiguring each
+  package based on that context.
+* [Nephio 5gc Topology Controller](nephio-5gc-controller/)
+  Builds on top of the NF controller and the pacakge deployment controller to
+  render multiple network functions across multiple, different types of
+  clusters.
+* [NF Injector
+  Controller](https://github.com/henderiw-nephio/nf-injector-controller)
+  Builds on the Nephio 5gc Topology controller to inject a `UPFDeployment`
+  resource and associated IPAM allocation requests.
+* [K8s IPAM Controller](https://github.com/nokia/k8s-ipam)
+  Provides an extensible IPAM system, along with a reference implementation. It
+  builds on top of the 5gc topology controller and NF injector controller to
+  perform IP allocations and inject the results back into the package.
+* [Nephio/Porch WebUI](https://github.com/GoogleContainerTools/kpt-backstage-plugins)
+  A prototype web UI for Porch that can be [configured
+  ](https://github.com/nephio-project/nephio-packages/tree/main/nephio-webui) for use in Nephio.
 * [Planter](planter/):
   A meta-scheduler for Kubernetes that enables an all-at-once fire-and-forget declarative
   frontend for the complex lifecycle management of the workload-and-its-cluster interrelationships.
   Addresses the ["bifurcation"](https://www.youtube.com/watch?v=6FULuWvXR84)
   (or "chicken-and-egg") problem that arises from vertically-integrated network function workloads.
+
+## ONE Summit 2022 Workshop
+
+For the ONE Summit in 2022, we tied together many of these prototypes into a
+larger working prototype. After the summit, we will publish a procedure for
+provisioning a complete sandbox environment to experiment with this.
