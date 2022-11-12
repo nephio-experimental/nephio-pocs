@@ -32,7 +32,7 @@ to Nephio's goals:
   or node-specific knowledge. Knap then generates Multus CNI configs automatically.
 * [Nephio NF Controllers](nephio-nf-controllers/)
   An example of network function controllers integrated with [kpt](https://kpt.dev/).
-* [Nephio Package Deployment Controller](nephio-controller-poc/)
+* [Nephio Package Deployment Controller](https://github.com/nephio-project/nephio-controller-poc/)
   Shows how to use Porch to render package variants across a set of cluster
   repositories, while injecting cluster specific context and reconfiguring each
   package based on that context.
