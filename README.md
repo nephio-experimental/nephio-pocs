@@ -56,6 +56,10 @@ to Nephio's goals:
   frontend for the complex lifecycle management of the workload-and-its-cluster interrelationships.
   Addresses the ["bifurcation"](https://www.youtube.com/watch?v=6FULuWvXR84)
   (or "chicken-and-egg") problem that arises from vertically-integrated network function workloads.
+* [nf-deploy-fn](https://github.com/henderiw-nephio/nf-deploy-fn)
+  Mutates and injects the IP allocationss in `UPFDeployment`. Runs as a kpt function in the kpt pipeline.
+* [nad-inject-fn](https://github.com/henderiw-nephio/nad-inject-fn)
+  Injects/generates Multus network attachement definitions based on a `UPFDeployment` and IP allocations. Runs as a kpt function in the kpt pipeline
 
 ## ONE Summit 2022 Workshop
 
