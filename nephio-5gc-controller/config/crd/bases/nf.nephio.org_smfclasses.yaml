@@ -1,0 +1,74 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.9.2
+  creationTimestamp: null
+  name: smfclasses.nf.nephio.org
+spec:
+  group: nf.nephio.org
+  names:
+    kind: SMFClass
+    listKind: SMFClassList
+    plural: smfclasses
+    singular: smfclass
+  scope: Namespaced
+  versions:
+  - name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: SMFClass is the Schema for the smfclasses API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: SMFClassSpec defines the desired state of SMFClass
+            properties:
+              n4EndpointCount:
+                type: integer
+              packageRef:
+                description: PackageRevisionReference is used to reference a particular
+                  package revision.
+                properties:
+                  namespace:
+                    description: Namespace is the namespace for both the repository
+                      and package revision
+                    type: string
+                  packageName:
+                    description: PackageName is the name of the package for the revision
+                    type: string
+                  repository:
+                    description: Repository is the name of the repository containing
+                      the package
+                    type: string
+                  revision:
+                    description: Revision is the specific version number of the revision
+                      of the package
+                    type: string
+                required:
+                - packageName
+                - repository
+                - revision
+                type: object
+            required:
+            - packageRef
+            type: object
+          status:
+            description: SMFClassStatus defines the observed state of SMFClass
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
