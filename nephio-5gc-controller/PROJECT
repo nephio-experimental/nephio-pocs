@@ -46,4 +46,12 @@ resources:
   kind: SMF
   path: github.com/nephio-project/nephio-pocs/nephio-5gc-controller/apis/nf/v1alpha1
   version: v1alpha1
+- api:
+    crdVersion: v1
+    namespaced: true
+  domain: nephio.org
+  group: nf
+  kind: SMFDeployment
+  path: github.com/nephio-project/nephio-pocs/nephio-5gc-controller/apis/nf/v1alpha1
+  version: v1alpha1
 version: "3"
