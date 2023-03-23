@@ -4,6 +4,9 @@ Nephio: Proofs of Concepts
 This repository collects information and code for proofs of concepts (PoCs) presented to and
 contributed to the [Nephio project](https://nephio.org/).
 
+**Note**: Issues should be opened in the [nephio](https://github.com/nephio-project/nephio) repository,
+using the prefix "nephio-pocs: " in the issue title.
+
 Pull requests are welcome. Each PoC has its own directory in this repository, which should
 minimally contain a `README.md` file with a description and link, but may contain the full source
 code and documentation for the PoC. Additionally, each PoC should be listed in the summary
