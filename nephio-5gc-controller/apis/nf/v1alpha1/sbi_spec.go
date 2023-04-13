@@ -17,10 +17,10 @@ limitations under the License.
 package v1alpha1
 
 type SbiEndpoint struct {
-	Ipv4Addr string `json:"ipv4addr"`
+    IPAddr   string `json:"ipaddr"`
 	Port     int    `json:"port"`
 	// +optional
-	NrfRegIpv4Addr string `json:"nfrregipv4addr"`
+	NrfRegIPAddr string `json:"nrfregipaddr"`
 }
 
 type SbiSpec struct {
