@@ -49,14 +49,14 @@ spec:
                   endpoints:
                     items:
                       properties:
-                        ipv4addr:
+                        ipaddr:
                           type: string
-                        nfrregipv4addr:
+                        nrfregipaddr:
                           type: string
                         port:
                           type: integer
                       required:
-                      - ipv4addr
+                      - ipaddr
                       - port
                       type: object
                     type: array

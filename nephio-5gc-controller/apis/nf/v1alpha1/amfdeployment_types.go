@@ -22,39 +22,42 @@ import (
 
 // EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
 // NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
+type AMFCapacity struct {
+    MaxSubscribers   int `json:"maxsubscribers"`
+}
 
-// SMFDeploymentSpec defines the desired state of SMFDeployment
-type SMFDeploymentSpec struct {
-	Capacity     SMFCapacity       `json:"capacity"`
-	N4Interfaces []InterfaceConfig `json:"n4Interfaces"`
+// AMFDeploymentSpec defines the desired state of AMFDeployment
+type AMFDeploymentSpec struct {
+	Capacity     AMFCapacity       `json:"capacity"`
+	N2Interfaces []InterfaceConfig `json:"n2Interfaces"`
     Sbi          SbiSpec           `json:"sbi"`
 }
 
-// SMFDeploymentStatus defines the observed state of SMFDeployment
-type SMFDeploymentStatus struct {
+// AMFDeploymentStatus defines the observed state of AMFDeployment
+type AMFDeploymentStatus struct {
 }
 
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
 
-// SMFDeployment is the Schema for the smfdeployments API
-type SMFDeployment struct {
+// AMFDeployment is the Schema for the amfdeployments API
+type AMFDeployment struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec   SMFDeploymentSpec   `json:"spec,omitempty"`
-	Status SMFDeploymentStatus `json:"status,omitempty"`
+	Spec   AMFDeploymentSpec   `json:"spec,omitempty"`
+	Status AMFDeploymentStatus `json:"status,omitempty"`
 }
 
 //+kubebuilder:object:root=true
 
-// SMFDeploymentList contains a list of SMFDeployment
-type SMFDeploymentList struct {
+// AMFDeploymentList contains a list of AMFDeployment
+type AMFDeploymentList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
-	Items           []SMFDeployment `json:"items"`
+	Items           []AMFDeployment `json:"items"`
 }
 
 func init() {
-	SchemeBuilder.Register(&SMFDeployment{}, &SMFDeploymentList{})
+	SchemeBuilder.Register(&AMFDeployment{}, &AMFDeploymentList{})
 }
